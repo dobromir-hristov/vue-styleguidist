@@ -5,8 +5,9 @@
 	"homepage": "https://vue-styleguidist.github.io",
 	"scripts": {
 		"precompile": "rimraf lib/",
-		"compile": "babel --ignore **/__tests__/*.js,**/*.spec.js -d lib/ src/",
-		"compile:watch": "yarn compile --watch"
+		"compile": "babel src/ --ignore **/__tests__/*.*,**/*.spec.* -d lib/ --extensions .js,.ts,.tsx,.jsx",
+		"compile:watch": "concurrently \"yarn compile --watch\" \"yarn typings --watch\"",
+		"typings": "tsc --noEmit"
 	},
 	"repository": {
 		"type": "git",
@@ -47,7 +48,7 @@
 		"function.name-polyfill": "^1.0.6",
 		"github-slugger": "^1.2.0",
 		"glob": "^7.1.2",
-		"glogg": "^1.0.1",
+		"glogg": "^1.0.2",
 		"hash-sum": "^1.0.2",
 		"is-directory": "^0.3.1",
 		"javascript-stringify": "^1.6.0",
@@ -89,6 +90,13 @@
 		"webpack": ">=4 < 4.29"
 	},
 	"devDependencies": {
+		"@types/lodash": "^4.14.136",
+		"@types/doctrine": "^0.0.3",
+		"@types/webpack": "^4.32.1",
+		"@types/webpack-dev-server": "^3.1.7",
+		"@types/webpack-merge": "^4.1.5",
+		"@babel/types": "^7.5.5",
+		"concurrently": "^4.1.1",
 		"strip-shebang": "^1.0.2",
 		"webpack": "^4.28.2"
 	}
