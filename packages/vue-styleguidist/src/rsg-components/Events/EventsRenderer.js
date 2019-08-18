@@ -10,7 +10,7 @@ import Type from 'rsg-components/Type'
 import Para from 'rsg-components/Para'
 import Table from 'rsg-components/Table'
 import map from 'lodash/map'
-import { unquote, getType, showSpaces } from '../../utils/utils'
+import { unquote, showSpaces } from '../../utils/utils'
 
 function renderType(type) {
 	if (!type) {
@@ -35,11 +35,11 @@ function renderType(type) {
 }
 
 function renderEnum(prop) {
-	if (!Array.isArray(getType(prop).value)) {
-		return <span>{getType(prop).value}</span>
+	if (!Array.isArray(prop.type.value)) {
+		return <span>{prop.type.value}</span>
 	}
 
-	const values = getType(prop).value.map(({ value }) => (
+	const values = prop.type.value.map(({ value }) => (
 		<Code key={value}>{showSpaces(unquote(value))}</Code>
 	))
 	return (
@@ -99,7 +99,7 @@ function renderDescription(prop) {
 }
 
 function renderExtra(prop) {
-	const type = getType(prop)
+	const type = prop.type
 
 	if (!type) {
 		return null
@@ -127,11 +127,11 @@ function renderExtra(prop) {
 }
 
 function renderUnion(prop) {
-	if (!Array.isArray(getType(prop).value)) {
-		return <span>{getType(prop).value}</span>
+	if (!Array.isArray(prop.type.value)) {
+		return <span>{prop.type.value}</span>
 	}
 
-	const values = getType(prop).value.map((value, index) => (
+	const values = prop.type.value.map((value, index) => (
 		<Type key={`${value.name}-${index}`}>{renderType(value)}</Type>
 	))
 	return (
@@ -150,7 +150,7 @@ function renderName(prop) {
 }
 
 function renderTypeColumn(prop) {
-	return <Type>{renderType(getType(prop))}</Type>
+	return <Type>{renderType(prop.type)}</Type>
 }
 
 export function getRowKey(row) {

@@ -1,8 +1,9 @@
-import React from 'react'
+import * as React from 'react'
 import slots from 'rsg-components/slots'
 import StyleGuide from 'rsg-components/StyleGuide'
 import getRouteData from 'react-styleguidist/lib/client/utils/getRouteData'
 import getPageTitle from 'react-styleguidist/lib/client/utils/getPageTitle'
+import { StyleGuideObject } from 'types/StyleGuide'
 import getComponentsFromSections from './getComponentsFromSections'
 import globalizeComponent from './globalizeComponent'
 import processSections from './processSections'
@@ -19,8 +20,8 @@ export const VueComponentMapContext = React.createContext({})
  * @return {React.ReactElement}
  */
 export default function renderStyleguide(
-	styleguide,
-	codeRevision,
+	styleguide: StyleGuideObject,
+	codeRevision: number,
 	loc = window.location,
 	doc = document,
 	hist = window.history
