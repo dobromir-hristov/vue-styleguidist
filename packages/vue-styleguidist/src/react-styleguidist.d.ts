@@ -1,3 +1,5 @@
+/* eslint-disable import/no-duplicates */
+
 // loaders
 
 declare module 'react-styleguidist/lib/loaders/utils/getNameFromFilePath' {
@@ -65,6 +67,11 @@ declare module 'react-styleguidist/lib/client/utils/getPageTitle' {
 		displayMode?: Title_DISPLAY_MODE
 	) => string
 	export default getPageTitle
+}
+
+declare module 'react-styleguidist/lib/client/utils/handleHash' {
+	export const getParameterByName: (hash: string, paramName: string) => string
+	export const hasInHash: (hash: string, separator: string) => boolean
 }
 
 // components

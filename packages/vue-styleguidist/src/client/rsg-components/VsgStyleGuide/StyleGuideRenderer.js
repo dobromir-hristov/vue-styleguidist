@@ -6,7 +6,7 @@ import Styled from 'rsg-components/Styled'
 import cx from 'classnames'
 import Ribbon from 'rsg-components/Ribbon'
 import Version from 'rsg-components/Version'
-import { HOMEPAGE } from '../../../scripts/consts'
+import { HOMEPAGE } from '../../../../scripts/consts'
 
 const styles = ({ color, fontFamily, fontSize, sidebarWidth, mq, space, maxWidth }) => ({
 	root: {

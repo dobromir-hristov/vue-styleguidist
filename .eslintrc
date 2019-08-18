@@ -10,7 +10,7 @@
 		"import/resolver": {
 			"node": {
 				"moduleDirectory": ["packages/vue-styleguidist/src", "node_modules"],
-				"extensions": [".ts", ".js", ".d.ts"]
+				"extensions": [".ts", ".tsx", ".js", ".d.ts"]
 			}
 		}
 	},
@@ -55,7 +55,7 @@
 			"settings": {
 				"import/resolver": {
 					"node": {
-						"extensions": [".ts", ".js", ".d.ts"]
+						"extensions": [".ts", ".tsx", ".js", ".d.ts"]
 					}
 				}
 			},
