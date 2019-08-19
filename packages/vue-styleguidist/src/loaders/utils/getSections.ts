@@ -1,12 +1,14 @@
-// This two functions should be in the same file because of cyclic imports
+// These two functions should be in the same file because of cyclic imports
 
-const fs = require('fs')
-const path = require('path')
-const _ = require('lodash')
-const requireIt = require('react-styleguidist/lib/loaders/utils/requireIt')
-const getComponentFiles = require('react-styleguidist/lib/loaders/utils/getComponentFiles')
-const slugger = require('react-styleguidist/lib/loaders/utils/slugger')
-const getComponents = require('./getComponents')
+import * as fs from 'fs'
+import * as path from 'path'
+import { castArray } from 'lodash'
+import requireIt from 'react-styleguidist/lib/loaders/utils/requireIt'
+import getComponentFiles from 'react-styleguidist/lib/loaders/utils/getComponentFiles'
+import slugger from 'react-styleguidist/lib/loaders/utils/slugger'
+import { Section, ProcessedSection } from 'types/Section'
+import { StyleGuidistConfigObject } from 'types/StyleGuide'
+import getComponents from './getComponents'
 
 const examplesLoader = path.resolve(__dirname, '../examples-loader.js')
 
@@ -18,14 +20,18 @@ const examplesLoader = path.resolve(__dirname, '../examples-loader.js')
  * @param {number} parentDepth
  * @returns {Array}
  */
-function getSections(sections, config, parentDepth) {
+function getSections(
+	sections: Section[],
+	config: StyleGuidistConfigObject,
+	parentDepth: number
+): ProcessedSection[] {
 	return sections.map(section => processSection(section, config, parentDepth))
 }
 
-const getSectionComponents = (section, config) => {
-	let ignore = config.ignore ? _.castArray(config.ignore) : []
+const getSectionComponents = (section: Section, config: StyleGuidistConfigObject) => {
+	let ignore = config.ignore ? castArray(config.ignore) : []
 	if (section.ignore) {
-		ignore = ignore.concat(_.castArray(section.ignore))
+		ignore = ignore.concat(castArray(section.ignore))
 	}
 
 	return getComponents(getComponentFiles(section.components, config.configDir, ignore), config)
@@ -38,7 +44,11 @@ const getSectionComponents = (section, config) => {
  * @param {number} parentDepth
  * @returns {object}
  */
-function processSection(section, config, parentDepth) {
+function processSection(
+	section: Section,
+	config: StyleGuidistConfigObject,
+	parentDepth: number
+): ProcessedSection {
 	const contentRelativePath = section.content
 
 	// Try to load section content file

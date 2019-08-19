@@ -14,15 +14,15 @@ const chunkify = require('react-styleguidist/lib/loaders/utils/chunkify').defaul
 const expandDefaultComponent = require('react-styleguidist/lib/loaders/utils/expandDefaultComponent')
 const getImports = require('react-styleguidist/lib/loaders/utils/getImports').default
 const requireIt = require('react-styleguidist/lib/loaders/utils/requireIt')
-const getComponentVueDoc = require('./utils/getComponentVueDoc')
-const cleanComponentName = require('./utils/cleanComponentName')
-const importCodeExampleFile = require('./utils/importCodeExampleFile')
+const getComponentVueDoc = require('./utils/getComponentVueDoc').default
+const cleanComponentName = require('./utils/cleanComponentName').default
+const importCodeExampleFile = require('./utils/importCodeExampleFile').default
 
 // Hack the react scaffolding to be able to load client
 const absolutize = filepath =>
 	path.resolve(
 		path.dirname(require.resolve('vue-styleguidist')),
-		'../loaders/utils/client',
+		'../lib/loaders/utils/client',
 		filepath
 	)
 

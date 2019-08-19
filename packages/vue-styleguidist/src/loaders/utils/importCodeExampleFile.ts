@@ -1,14 +1,16 @@
-const path = require('path')
-const fs = require('fs')
+import * as fs from 'fs'
+import * as path from 'path'
+import { Example } from 'types/Example'
 
 /**
  * Extract example from file
  */
 const importRE = /^\[import\]\(([./\w]+)\)/
 
-module.exports = function importCodeExampleFile(example, mdPath, wp) {
-	if (importRE.test(example.lang)) {
-		const filePath = importRE.exec(example.lang)[1]
+export default function importCodeExampleFile(example: Example, mdPath: string, wp: any): Example {
+	const lang = importRE.exec(example.lang)
+	if (lang) {
+		const filePath = lang[1]
 		const absoluteFilePath = path.resolve(path.dirname(mdPath), filePath)
 		wp.addDependency(absoluteFilePath)
 		example.content = fs.readFileSync(absoluteFilePath, 'utf8')

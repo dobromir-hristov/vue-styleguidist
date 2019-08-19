@@ -1,7 +1,8 @@
-const fs = require('fs')
-const path = require('path')
-const qss = require('qss')
-const requireIt = require('react-styleguidist/lib/loaders/utils/requireIt')
+import * as fs from 'fs'
+import * as path from 'path'
+import qss from 'qss'
+import requireIt from 'react-styleguidist/lib/loaders/utils/requireIt'
+import { Example } from 'types/Example'
 
 const examplesLoader = path.resolve(__dirname, '../examples-loader.js')
 
@@ -16,12 +17,12 @@ const examplesLoader = path.resolve(__dirname, '../examples-loader.js')
  * @returns {object|Array}
  */
 module.exports = function getExamples(
-	file,
-	examplesFile,
-	displayName,
-	defaultExample,
-	isComponentDocInVueFile
-) {
+	file: string,
+	examplesFile: string,
+	displayName: string,
+	defaultExample: string,
+	isComponentDocInVueFile: boolean
+): Example[] | null {
 	const examplesFileToLoad = examplesFile || defaultExample
 	if (!examplesFileToLoad) {
 		return null

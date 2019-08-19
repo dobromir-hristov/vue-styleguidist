@@ -1,12 +1,12 @@
-const parseVue = require('./parseVue')
-const path = require('path')
-const fs = require('fs')
+import * as fs from 'fs'
+import * as path from 'path'
+import parseVue from './parseVue'
 
-const readSeparateScriptFile = fileName => {
+const readSeparateScriptFile = (fileName: string) => {
 	return fs.readFileSync(fileName, { encoding: 'utf-8' })
 }
 
-module.exports = function getComponentVueDoc(source, file) {
+export default function getComponentVueDoc(source: string, file: string) {
 	const parts = parseVue(source, file)
 
 	if (parts.customBlocks) {

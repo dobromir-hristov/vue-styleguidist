@@ -1,9 +1,10 @@
-const fs = require('fs')
-const path = require('path')
-const { parseComponent } = require('vue-template-compiler')
-const getNameFromFilePath = require('react-styleguidist/lib/loaders/utils/getNameFromFilePath')
-const requireIt = require('react-styleguidist/lib/loaders/utils/requireIt')
-const slugger = require('react-styleguidist/lib/loaders/utils/slugger')
+import { parseComponent } from 'vue-template-compiler'
+import * as fs from 'fs'
+import * as path from 'path'
+import getNameFromFilePath from 'react-styleguidist/lib/loaders/utils/getNameFromFilePath'
+import requireIt from 'react-styleguidist/lib/loaders/utils/requireIt'
+import slugger from 'react-styleguidist/lib/loaders/utils/slugger'
+import { Component } from 'types/Component'
 
 const vueDocLoader = path.resolve(__dirname, '../vuedoc-loader.js')
 
@@ -13,9 +14,9 @@ const vueDocLoader = path.resolve(__dirname, '../vuedoc-loader.js')
  * @param {string} filepath
  * @returns {object}
  */
-function getComponentMetadataPath(filepath) {
-	const extname = path.extname(filepath)
-	return filepath.substring(0, filepath.length - extname.length) + '.json'
+function getComponentMetadataPath(filepath: string): string {
+	const ext = path.extname(filepath)
+	return filepath.substring(0, filepath.length - ext.length) + '.json'
 }
 
 /**
@@ -25,7 +26,7 @@ function getComponentMetadataPath(filepath) {
  * @param {object} config
  * @returns {object}
  */
-module.exports = function processComponent(filepath, config) {
+export default function processComponent(filepath: string, config: any): Component {
 	const componentPath = path.relative(config.configDir, filepath)
 	const componentName = getNameFromFilePath(filepath)
 	const props = requireIt(`!!${vueDocLoader}!${filepath}`)
