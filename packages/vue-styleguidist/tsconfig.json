@@ -2,13 +2,10 @@
 	"extends": "../../tsconfig",
 	"compilerOptions": {
 		"lib": ["dom", "esnext"],
-		"jsx": "preserve",
 		"baseUrl": "./src",
-		"strict": true,
 		"allowJs": true,
 		"outDir": "lib",
-		"allowSyntheticDefaultImports": true,
-		"target": "es5"
+		"allowSyntheticDefaultImports": true
 	},
 	"include": ["./src/**/*.ts", "./src/**/*.tsx"],
 	"exclude": ["node_modules"]

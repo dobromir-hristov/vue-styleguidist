@@ -1,3 +1,4 @@
+import WebpackDevServer from 'webpack-dev-server'
 import { Configuration } from 'webpack'
 import { ProcessedSection } from './Section'
 import { EXPAND_MODE } from './enums'
@@ -28,6 +29,7 @@ export interface StyleGuidistConfigObject {
 	}
 	mountPointId: string
 	template: string
+	configureServer?: (server: WebpackDevServer, env: string) => string
 	dangerouslyUpdateWebpackConfig?: (
 		config: Configuration,
 		env: 'development' | 'production' | 'none'

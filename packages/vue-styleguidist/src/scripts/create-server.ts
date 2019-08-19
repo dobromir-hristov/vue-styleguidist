@@ -1,5 +1,5 @@
 import webpack, { Configuration } from 'webpack'
-import WebpackDevServer, { Configuration as ServerConfiguration } from 'webpack-dev-server'
+import WebpackDevServer from 'webpack-dev-server'
 import merge from 'webpack-merge'
 import { StyleGuidistConfigObject } from 'types/StyleGuide'
 import makeWebpackConfig from './make-webpack-config'
@@ -9,22 +9,28 @@ export default function createServer(
 	env: 'development' | 'production' | 'none'
 ) {
 	const webpackConfig: Configuration = makeWebpackConfig(config, env)
-	const webpackDevServerConfig: ServerConfiguration = merge(
+	const { devServer: webpackDevServerConfig } = merge(
 		{
-			noInfo: true,
-			compress: true,
-			clientLogLevel: 'none',
-			hot: true,
-			quiet: true,
-			watchOptions: {
-				ignored: /node_modules/
-			},
-			watchContentBase: config.assetsDir !== undefined,
-			stats: webpackConfig.stats || {}
+			devServer: {
+				noInfo: true,
+				compress: true,
+				clientLogLevel: 'none',
+				hot: true,
+				quiet: true,
+				watchOptions: {
+					ignored: /node_modules/
+				},
+				watchContentBase: config.assetsDir !== undefined,
+				stats: webpackConfig.stats || {}
+			}
 		},
-		webpackConfig.devServer,
 		{
-			contentBase: config.assetsDir
+			devServer: webpackConfig.devServer
+		},
+		{
+			devServer: {
+				contentBase: config.assetsDir
+			}
 		}
 	)
 
@@ -33,7 +39,7 @@ export default function createServer(
 
 	// User defined customizations
 	if (config.configureServer) {
-		config.configureServer(devServer.app, env)
+		config.configureServer(devServer, env)
 	}
 
 	return { app: devServer, compiler }
