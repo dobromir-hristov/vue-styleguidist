@@ -36,7 +36,7 @@ function updateConfig(config) {
 function commandBuild(config) {
 	console.log('Building style guide...')
 
-	const build = require('./build')
+	const build = require('./build').default
 	const compiler = build(config, err => {
 		if (err) {
 			console.error(err)
