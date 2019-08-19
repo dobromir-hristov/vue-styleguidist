@@ -22,7 +22,7 @@ const importCodeExampleFile = require('./utils/importCodeExampleFile').default
 const absolutize = filepath =>
 	path.resolve(
 		path.dirname(require.resolve('vue-styleguidist')),
-		'../lib/loaders/utils/client',
+		'../loaders/utils/client',
 		filepath
 	)
 

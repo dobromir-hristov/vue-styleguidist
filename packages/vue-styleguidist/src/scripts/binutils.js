@@ -67,7 +67,7 @@ function commandBuild(config) {
 function commandServer(config, open) {
 	let spinner
 
-	const server = require('./server')
+	const server = require('./server').default
 	const { app, compiler } = server(config, err => {
 		if (err) {
 			console.error(err)

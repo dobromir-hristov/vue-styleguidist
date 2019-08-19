@@ -1,11 +1,15 @@
-const webpack = require('webpack')
-const WebpackDevServer = require('webpack-dev-server')
-const merge = require('webpack-merge')
-const makeWebpackConfig = require('./make-webpack-config')
+import webpack, { Configuration } from 'webpack'
+import WebpackDevServer, { Configuration as ServerConfiguration } from 'webpack-dev-server'
+import merge from 'webpack-merge'
+import { StyleGuidistConfigObject } from 'types/StyleGuide'
+import makeWebpackConfig from './make-webpack-config'
 
-module.exports = function createServer(config, env) {
-	const webpackConfig = makeWebpackConfig(config, env)
-	const webpackDevServerConfig = merge(
+export default function createServer(
+	config: StyleGuidistConfigObject,
+	env: 'development' | 'production' | 'none'
+) {
+	const webpackConfig: Configuration = makeWebpackConfig(config, env)
+	const webpackDevServerConfig: ServerConfiguration = merge(
 		{
 			noInfo: true,
 			compress: true,

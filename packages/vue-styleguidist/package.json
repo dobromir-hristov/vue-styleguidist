@@ -17,9 +17,9 @@
 		"url": "https://github.com/vue-styleguidist/vue-styleguidist/issues"
 	},
 	"license": "MIT",
-	"main": "scripts/index.js",
+	"main": "lib/scripts/index.js",
 	"bin": {
-		"vue-styleguidist": "bin/styleguidist.js"
+		"vue-styleguidist": "lib/bin/styleguidist.js"
 	},
 	"files": [
 		"bin",
@@ -32,14 +32,14 @@
 		"npm": ">=3"
 	},
 	"dependencies": {
-		"@vxna/mini-html-webpack-template": "^0.1.7",
+		"@vxna/mini-html-webpack-template": "^1.0.0",
 		"ast-types": "^0.12.2",
 		"classnames": "^2.2.6",
-		"clean-webpack-plugin": "^0.1.19",
+		"clean-webpack-plugin": "^3.0.0",
 		"clipboard-copy": "^3.0.0",
 		"codemirror": "^5.39.0",
 		"common-dir": "^2.0.2",
-		"copy-webpack-plugin": "^4.5.2",
+		"copy-webpack-plugin": "^5.0.4",
 		"css-loader": "^2.1.1",
 		"es6-object-assign": "^1.1.0",
 		"es6-promise": "^4.2.6",
@@ -57,7 +57,7 @@
 		"loader-utils": "^1.1.0",
 		"lodash": "^4.17.10",
 		"lru-cache": "^4.1.3",
-		"mini-html-webpack-plugin": "^0.2.3",
+		"mini-html-webpack-plugin": "^2.0.0",
 		"minimist": "^1.2.0",
 		"ora": "^2.1.0",
 		"prismjs": "^1.15.0",
@@ -90,8 +90,10 @@
 		"webpack": ">=4 < 4.29"
 	},
 	"devDependencies": {
+		"@types/copy-webpack-plugin": "^5.0.0",
 		"@types/lodash": "^4.14.136",
 		"@types/react-dom": "^16.8.5",
+		"@types/terser-webpack-plugin": "^1.2.1",
 		"@types/webpack": "^4.32.1",
 		"@types/webpack-dev-server": "^3.1.7",
 		"@types/webpack-merge": "^4.1.5",

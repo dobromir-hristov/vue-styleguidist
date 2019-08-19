@@ -80,7 +80,8 @@ module.exports = {
 			"Display each component with a default example, regardless of if there's a README or <docs/> block written.",
 		type: ['boolean', 'existing file path'],
 		default: false,
-		process: val => (val === true ? path.resolve(__dirname, '../templates/DefaultExample.md') : val)
+		process: val =>
+			val === true ? path.resolve(__dirname, '../../../templates/DefaultExample.md') : val
 	},
 	editorConfig: {
 		type: 'object',

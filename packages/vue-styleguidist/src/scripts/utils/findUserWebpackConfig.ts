@@ -11,7 +11,7 @@ const USER_WEBPACK_CONFIG_NAMES = [
  *
  * @return {string|boolean}
  */
-module.exports = function findUserWebpackConfig() {
+export default function findUserWebpackConfig(): string | boolean {
 	// Check in the root folder
 	for (const configFile of USER_WEBPACK_CONFIG_NAMES) {
 		try {

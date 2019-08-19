@@ -1,22 +1,26 @@
-const path = require('path')
-const webpack = require('webpack')
-const TerserPlugin = require('terser-webpack-plugin')
-const MiniHtmlWebpackPlugin = require('mini-html-webpack-plugin')
-const MiniHtmlWebpackTemplate = require('@vxna/mini-html-webpack-template')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const merge = require('webpack-merge')
-const forEach = require('lodash/forEach')
-const isFunction = require('lodash/isFunction')
-const StyleguidistOptionsPlugin = require('react-styleguidist/lib/scripts/utils/StyleguidistOptionsPlugin')
-const mergeWebpackConfig = require('./utils/mergeWebpackConfig')
-const makeWebpackConfig = require('react-styleguidist/lib/scripts/make-webpack-config')
+import * as path from 'path'
+import webpack, { Configuration } from 'webpack'
+import TerserPlugin from 'terser-webpack-plugin'
+import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
+import MiniHtmlWebpackPlugin from 'mini-html-webpack-plugin'
+import MiniHtmlWebpackTemplate from '@vxna/mini-html-webpack-template'
+import merge from 'webpack-merge'
+import forEach from 'lodash/forEach'
+import isFunction from 'lodash/isFunction'
+import { StyleGuidistConfigObject } from 'types/StyleGuide'
+import makeWebpackConfig from 'react-styleguidist/lib/scripts/make-webpack-config'
+import StyleguidistOptionsPlugin from 'react-styleguidist/lib/scripts/utils/StyleguidistOptionsPlugin'
+import mergeWebpackConfig from './utils/mergeWebpackConfig'
 
 const RENDERER_REGEXP = /Renderer$/
 
-const sourceDir = path.resolve(__dirname, '../lib/client')
+const sourceDir = path.resolve(__dirname, '../client')
 
-module.exports = function(config, env) {
+export default function(
+	config: StyleGuidistConfigObject,
+	env: 'development' | 'production' | 'none'
+): Configuration {
 	process.env.NODE_ENV = process.env.NODE_ENV || env
 	const isProd = env === 'production'
 
@@ -31,7 +35,7 @@ module.exports = function(config, env) {
 		template
 	}
 
-	let webpackConfig = {
+	let webpackConfig: Configuration = {
 		output: {
 			path: config.styleguideDir,
 			filename: 'build/[name].bundle.js',
@@ -49,7 +53,7 @@ module.exports = function(config, env) {
 			rules: [
 				{
 					resourceQuery: /blockType=docs/,
-					loader: require.resolve('../lib/loaders/docs-loader.js')
+					loader: require.resolve('../loaders/docs-loader.js')
 				}
 			]
 		},
@@ -127,8 +131,7 @@ module.exports = function(config, env) {
 				publicPath: config.styleguidePublicPath
 			},
 			plugins: [
-				new CleanWebpackPlugin(['build'], {
-					root: config.styleguideDir,
+				new CleanWebpackPlugin({
 					verbose: config.verbose === true
 				}),
 				new CopyWebpackPlugin(
@@ -162,13 +165,13 @@ module.exports = function(config, env) {
 	const RSG_COMPONENTS_ALIAS = 'rsg-components'
 	const RSG_COMPONENTS_ALIAS_DEFAULT = `${RSG_COMPONENTS_ALIAS}-default`
 
-	const webpackAlias = webpackConfig.resolve.alias
+	const webpackAlias = (webpackConfig.resolve && webpackConfig.resolve.alias) || {}
 
 	// vue-styleguidist overridden components
 	const sourceSrc = path.resolve(sourceDir, RSG_COMPONENTS_ALIAS)
 	require('fs')
 		.readdirSync(sourceSrc)
-		.forEach(function(component) {
+		.forEach(function(component: string) {
 			webpackAlias[`${RSG_COMPONENTS_ALIAS}/${component}`] = path.resolve(sourceSrc, component)
 			// plus in order to avoid cirular references, add an extra ref to the defaults
 			// so that custom components can reference their defaults
@@ -183,10 +186,14 @@ module.exports = function(config, env) {
 		'ReactComponent/ReactComponent',
 		'StyleGuide/StyleGuideRenderer'
 	]
-	const customComponents = custComp.reduce(function(acc, comp) {
+	const customComponents: { [originalPath: string]: string } = custComp.reduce(function(
+		acc: { [originalPath: string]: string },
+		comp
+	) {
 		acc[comp] = `Vsg${comp}`
 		return acc
-	}, {})
+	},
+	{})
 
 	if (config.codeSplit) {
 		customComponents['Playground/Playground'] = 'PlaygroundAsync/PlaygroundAsync'
@@ -194,7 +201,7 @@ module.exports = function(config, env) {
 
 	customComponents.Preview = path.join('Preview', config.codeSplit ? 'PreviewAsync' : 'Preview')
 
-	const buildEditorComponentChain = cc => {
+	const buildEditorComponentChain = (cc: { [originalPath: string]: string }) => {
 		let key = 'Editor'
 
 		// avoid codesplitting tiny prism only spli heavy codemirror
@@ -240,9 +247,10 @@ module.exports = function(config, env) {
 
 	// Add components folder alias at the end so users can override our components to customize the style guide
 	// (their aliases should be before this one)
-	webpackAlias[RSG_COMPONENTS_ALIAS] = makeWebpackConfig(config, env).resolve.alias[
-		RSG_COMPONENTS_ALIAS
-	]
+	const resolve = makeWebpackConfig(config, env).resolve
+	if (resolve && resolve.alias) {
+		webpackAlias[RSG_COMPONENTS_ALIAS] = resolve.alias[RSG_COMPONENTS_ALIAS]
+	}
 
 	// To avoid circular rendering when overriding existing components,
 	// Create another alias, not overriden by users

@@ -38,6 +38,25 @@ declare module 'react-styleguidist/lib/loaders/utils/removeDoclets' {
 	export = removeDoclets
 }
 
+// script
+
+declare module 'react-styleguidist/lib/scripts/make-webpack-config' {
+	import { Configuration } from 'webpack'
+	import { StyleGuidistConfigObject } from 'types/StyleGuide'
+
+	const makeWebpackConfig: (config: StyleGuidistConfigObject, env: string) => Configuration
+	export default makeWebpackConfig
+}
+
+declare module 'react-styleguidist/lib/scripts/utils/StyleguidistOptionsPlugin' {
+	import { Plugin } from 'webpack'
+
+	class StyleguidistOptionsPlugin extends Plugin {
+		constructor(options: any)
+	}
+	export = StyleguidistOptionsPlugin
+}
+
 // client
 
 declare module 'react-styleguidist/lib/client/utils/getRouteData' {

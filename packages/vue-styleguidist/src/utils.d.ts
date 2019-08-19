@@ -1,3 +1,5 @@
+/* eslint-disable import/no-duplicates */
+
 declare module 'glogg' {
 	interface GloggLogger {
 		debug(msg: string): void
@@ -22,4 +24,19 @@ declare module 'lru-cache' {
 declare module 'hash-sum' {
 	function makehash(key: any): string
 	export = makehash
+}
+
+declare module 'mini-html-webpack-plugin' {
+	import { Plugin } from 'webpack'
+
+	class HtmlPlugin extends Plugin {
+		constructor(options: any)
+	}
+
+	export = HtmlPlugin
+}
+
+declare module '@vxna/mini-html-webpack-template' {
+	function template(...args: any[]): string
+	export = template
 }
