@@ -14,7 +14,7 @@ const makeWebpackConfig = require('react-styleguidist/lib/scripts/make-webpack-c
 
 const RENDERER_REGEXP = /Renderer$/
 
-const sourceDir = path.resolve(__dirname, '../lib')
+const sourceDir = path.resolve(__dirname, '../lib/client')
 
 module.exports = function(config, env) {
 	process.env.NODE_ENV = process.env.NODE_ENV || env
