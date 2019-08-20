@@ -8,10 +8,8 @@ module.exports = {
 					ie: 11
 				},
 				forceAllTransforms: true
-				//modules: false
 			}
 		],
-		'@babel/react',
 		'@babel/typescript'
 	],
 	plugins: [
@@ -32,8 +30,25 @@ module.exports = {
 	},
 	overrides: [
 		{
-			test: ['./test/cli-packages'],
+			test: './test/cli-packages',
 			presets: ['@vue/app']
+		},
+		{
+			test: /packages[\\/]vue-styleguidist[\\/]src[\\/]client[\\/]/,
+			presets: [
+				[
+					'@babel/env',
+					{
+						targets: {
+							chrome: 59,
+							ie: 11
+						},
+						forceAllTransforms: true,
+						modules: false
+					}
+				],
+				'@babel/react'
+			]
 		}
 	]
 }
