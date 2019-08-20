@@ -18,10 +18,10 @@ const examplesLoader = path.resolve(__dirname, '../examples-loader.js')
  */
 export default function getExamples(
 	file: string,
-	examplesFile: string,
+	examplesFile: string | false,
 	displayName: string,
-	defaultExample: string,
-	isComponentDocInVueFile: boolean
+	defaultExample?: string,
+	isComponentDocInVueFile?: boolean
 ): Example[] | null {
 	const examplesFileToLoad = examplesFile || defaultExample
 	if (!examplesFileToLoad) {

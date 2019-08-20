@@ -40,7 +40,7 @@ function isVueFile(filepath: string) {
 
 export default function examplesLoader(this: StyleguidistContext, src: string) {
 	const filePath = this.request.split('!').pop()
-	let source: string | false = false
+	let source: string | false = src
 	if (!filePath) return
 	if (isVueFile(filePath)) {
 		// if it's a vue file, the examples are in a docs block

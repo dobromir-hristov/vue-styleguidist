@@ -104,14 +104,13 @@ export default function(this: StyleguidistContext, source: string) {
 		docs.props = sortProps(propsAsArray)
 	}
 
-	const examplesFile: string = config.getExampleFilename
-		? config.getExampleFilename(file)
-		: 'default'
+	const examplesFile = config.getExampleFilename ? config.getExampleFilename(file) : false
+
 	docs.examples = getExamples(
 		file,
 		examplesFile,
 		docs.displayName,
-		config.defaultExample || '',
+		config.defaultExample,
 		isComponentDocInVueFile
 	)
 
