@@ -53,3 +53,8 @@ declare module 'to-ast' {
 	function toAst(input: any): any
 	export = toAst
 }
+
+declare module 'common-dir' {
+	function commonDir(paths: string[]): string
+	export = commonDir
+}

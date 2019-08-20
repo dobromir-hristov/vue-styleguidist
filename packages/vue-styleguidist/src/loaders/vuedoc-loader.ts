@@ -13,7 +13,7 @@ import getComponentVueDoc from './utils/getComponentVueDoc'
 const logger = createLogger('vsg')
 const examplesLoader = path.resolve(__dirname, './examples-loader.js')
 
-interface StyleguidistContext extends loader.LoaderContext {
+export interface StyleguidistContext extends loader.LoaderContext {
 	_styleguidist: StyleGuidistConfigObject
 }
 

@@ -20,7 +20,7 @@ const examplesLoader = path.resolve(__dirname, '../examples-loader.js')
  * @param {number} parentDepth
  * @returns {Array}
  */
-function getSections(
+export default function getSections(
 	sections: Section[],
 	config: StyleGuidistConfigObject,
 	parentDepth: number
@@ -44,7 +44,7 @@ const getSectionComponents = (section: Section, config: StyleGuidistConfigObject
  * @param {number} parentDepth
  * @returns {object}
  */
-function processSection(
+export function processSection(
 	section: Section,
 	config: StyleGuidistConfigObject,
 	parentDepth: number
@@ -70,12 +70,12 @@ function processSection(
 	}
 
 	return {
-		name: section.name,
+		name: section.name || '',
 		exampleMode: section.exampleMode || config.exampleMode,
 		usageMode: section.usageMode || config.usageMode,
 		sectionDepth,
 		description: section.description,
-		slug: slugger.slug(section.name),
+		slug: slugger.slug(section.name || ''),
 		sections: getSections(section.sections || [], config, sectionDepth),
 		filepath: contentRelativePath,
 		href: section.href,
@@ -84,6 +84,3 @@ function processSection(
 		external: section.external
 	}
 }
-
-module.exports = getSections
-module.exports.processSection = processSection

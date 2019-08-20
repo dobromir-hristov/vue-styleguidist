@@ -15,7 +15,10 @@ declare module 'react-styleguidist/lib/loaders/utils/requireIt' {
 }
 
 declare module 'react-styleguidist/lib/loaders/utils/slugger' {
-	const slugger: { slug: (input: string) => string }
+	const slugger: {
+		slug: (input: string) => string
+		reset(): void
+	}
 	export = slugger
 }
 
@@ -45,6 +48,35 @@ declare module 'react-styleguidist/lib/loaders/utils/sortProps' {
 	export = sortProps
 }
 
+declare module 'react-styleguidist/lib/loaders/utils/getAllContentPages' {
+	import { ProcessedSection as SectionPages } from 'types/Section'
+
+	function getAllContentPages(sections: SectionPages[]): string[]
+	export = getAllContentPages
+}
+declare module 'react-styleguidist/lib/loaders/utils/getComponentFilesFromSections' {
+	import { Section as SectionFiles } from 'types/Section'
+
+	function getComponentFilesFromSections(
+		sections: SectionFiles[],
+		componentDir: string,
+		ignore?: string | string[]
+	): string[]
+	export = getComponentFilesFromSections
+}
+declare module 'react-styleguidist/lib/loaders/utils/getComponentPatternsFromSections' {
+	import { Section as SectionPattern } from 'types/Section'
+
+	function getComponentPatternsFromSections(sections: SectionPattern[]): string[]
+	export = getComponentPatternsFromSections
+}
+declare module 'react-styleguidist/lib/loaders/utils/filterComponentsWithExample' {
+	import { ProcessedSection as SectionFilter } from 'types/Section'
+
+	function filterComponentsWithExample(sections: SectionFilter[]): SectionFilter[]
+	export = filterComponentsWithExample
+}
+
 // script
 
 declare module 'react-styleguidist/lib/scripts/make-webpack-config' {
@@ -65,7 +97,10 @@ declare module 'react-styleguidist/lib/scripts/utils/StyleguidistOptionsPlugin' 
 }
 
 declare module 'react-styleguidist/lib/scripts/utils/findFileCaseInsensitive' {
-	function findFileCaseInsensitive(filePath: string): boolean
+	const findFileCaseInsensitive: {
+		(filePath: string): boolean
+		clearCache(): void
+	}
 	export = findFileCaseInsensitive
 }
 

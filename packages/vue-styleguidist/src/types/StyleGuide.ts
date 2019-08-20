@@ -1,10 +1,13 @@
 import WebpackDevServer from 'webpack-dev-server'
 import { ComponentDoc, PropDescriptor } from 'vue-docgen-api'
 import { Configuration } from 'webpack'
-import { ProcessedSection } from './Section'
+import { ProcessedSection, Section } from './Section'
 import { EXPAND_MODE } from './enums'
 
 export interface StyleGuidistConfigObject {
+	sections?: Section[]
+	renderRootJsx?: string
+	skipComponentsWithoutExample?: boolean
 	updateDocs?(doc: ComponentDoc, file: string): ComponentDoc
 	defaultExample: string
 	getExampleFilename?(file: string): string

@@ -1,16 +1,19 @@
-const pick = require('lodash/pick')
-const commonDir = require('common-dir')
-const generate = require('escodegen').generate
-const toAst = require('to-ast')
-const logger = require('glogg')('vsg')
-const fileExistsCaseInsensitive = require('react-styleguidist/lib/scripts/utils/findFileCaseInsensitive')
-const getAllContentPages = require('react-styleguidist/lib/loaders/utils/getAllContentPages')
-const getComponentFilesFromSections = require('react-styleguidist/lib/loaders/utils/getComponentFilesFromSections')
-const getComponentPatternsFromSections = require('react-styleguidist/lib/loaders/utils/getComponentPatternsFromSections')
-const getSections = require('./utils/getSections')
-const filterComponentsWithExample = require('react-styleguidist/lib/loaders/utils/filterComponentsWithExample')
-const slugger = require('react-styleguidist/lib/loaders/utils/slugger')
-const requireIt = require('react-styleguidist/lib/loaders/utils/requireIt')
+import pick from 'lodash/pick'
+import commonDir from 'common-dir'
+import { generate } from 'escodegen'
+import toAst from 'to-ast'
+import createLogger from 'glogg'
+import fileExistsCaseInsensitive from 'react-styleguidist/lib/scripts/utils/findFileCaseInsensitive'
+import getAllContentPages from 'react-styleguidist/lib/loaders/utils/getAllContentPages'
+import getComponentFilesFromSections from 'react-styleguidist/lib/loaders/utils/getComponentFilesFromSections'
+import getComponentPatternsFromSections from 'react-styleguidist/lib/loaders/utils/getComponentPatternsFromSections'
+import filterComponentsWithExample from 'react-styleguidist/lib/loaders/utils/filterComponentsWithExample'
+import slugger from 'react-styleguidist/lib/loaders/utils/slugger'
+import requireIt from 'react-styleguidist/lib/loaders/utils/requireIt'
+import getSections from './utils/getSections'
+import { StyleguidistContext } from './vuedoc-loader'
+
+const logger = createLogger('vsg')
 
 // Config options that should be passed to the client
 const CLIENT_CONFIG_OPTIONS = [
@@ -31,7 +34,7 @@ const CLIENT_CONFIG_OPTIONS = [
 ]
 
 module.exports = function() {}
-module.exports.pitch = function() {
+module.exports.pitch = function(this: StyleguidistContext) {
 	// Clear cache so it would detect new or renamed files
 	fileExistsCaseInsensitive.clearCache()
 
@@ -39,8 +42,9 @@ module.exports.pitch = function() {
 	slugger.reset()
 
 	const config = this._styleguidist
+	if (!config.sections) return
 
-	let sections = getSections(config.sections, config)
+	let sections = getSections(config.sections, config, 0)
 	if (config.skipComponentsWithoutExample) {
 		sections = filterComponentsWithExample(sections)
 	}
