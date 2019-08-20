@@ -1,14 +1,19 @@
 import WebpackDevServer from 'webpack-dev-server'
+import { ComponentDoc, PropDescriptor } from 'vue-docgen-api'
 import { Configuration } from 'webpack'
 import { ProcessedSection } from './Section'
 import { EXPAND_MODE } from './enums'
 
 export interface StyleGuidistConfigObject {
-	printBuildInstructions?: (config: StyleGuidistConfigObject) => void
-	printServerInstructions?: (
-		config: StyleGuidistConfigObject,
-		options: { isHttps: boolean }
-	) => void
+	updateDocs?(doc: ComponentDoc, file: string): ComponentDoc
+	defaultExample: string
+	getExampleFilename?(file: string): string
+	sortProps?(props: PropDescriptor[]): { [key: string]: PropDescriptor }
+	propsParser?(file: string): ComponentDoc
+	jsxInComponents?: boolean
+	contextDependencies?: string[]
+	printBuildInstructions?(config: StyleGuidistConfigObject): void
+	printServerInstructions?(config: StyleGuidistConfigObject, options: { isHttps: boolean }): void
 	showUsage?: boolean
 	components?: string
 	highlightTheme?: { theme: string }
@@ -40,10 +45,10 @@ export interface StyleGuidistConfigObject {
 	template: string
 	styleguidistDir?: string
 	configureServer?: (server: WebpackDevServer, env: string) => string
-	dangerouslyUpdateWebpackConfig?: (
+	dangerouslyUpdateWebpackConfig?(
 		config: Configuration,
 		env: 'development' | 'production' | 'none'
-	) => Configuration
+	): Configuration
 	logger?: {
 		info(message: string): void
 		warn(message: string): void

@@ -38,6 +38,13 @@ declare module 'react-styleguidist/lib/loaders/utils/removeDoclets' {
 	export = removeDoclets
 }
 
+declare module 'react-styleguidist/lib/loaders/utils/sortProps' {
+	import { PropDescriptor } from 'vue-docgen-api'
+
+	function sortProps(props: PropDescriptor[]): { [key: string]: PropDescriptor }
+	export = sortProps
+}
+
 // script
 
 declare module 'react-styleguidist/lib/scripts/make-webpack-config' {

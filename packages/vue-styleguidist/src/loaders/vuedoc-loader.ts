@@ -1,18 +1,25 @@
-const path = require('path')
-const generate = require('escodegen').generate
-const toAst = require('to-ast')
-const logger = require('glogg')('vsg')
-const getExamples = require('./utils/getExamples')
-const requireIt = require('react-styleguidist/lib/loaders/utils/requireIt')
-const getComponentVueDoc = require('./utils/getComponentVueDoc')
-// eslint-disable-next-line import/no-unresolved
-const vueDocs = require('vue-docgen-api')
-const defaultSortProps = require('react-styleguidist/lib/loaders/utils/sortProps')
+import * as path from 'path'
+import { loader } from 'webpack'
+import { generate } from 'escodegen'
+import toAst from 'to-ast'
+import createLogger from 'glogg'
+import { parse, ComponentDoc, Tag, PropDescriptor } from 'vue-docgen-api'
+import { StyleGuidistConfigObject } from 'types/StyleGuide'
+import defaultSortProps from 'react-styleguidist/lib/loaders/utils/sortProps'
+import requireIt from 'react-styleguidist/lib/loaders/utils/requireIt'
+import getExamples from './utils/getExamples'
+import getComponentVueDoc from './utils/getComponentVueDoc'
 
+const logger = createLogger('vsg')
 const examplesLoader = path.resolve(__dirname, './examples-loader.js')
 
-module.exports = function(source) {
+interface StyleguidistContext extends loader.LoaderContext {
+	_styleguidist: StyleGuidistConfigObject
+}
+
+export default function(this: StyleguidistContext, source: string) {
 	const file = this.request.split('!').pop()
+	if (!file) return
 	const config = this._styleguidist
 
 	// Setup Webpack context dependencies to enable hot reload when adding new files or updating any of component dependencies
@@ -21,19 +28,20 @@ module.exports = function(source) {
 	}
 
 	const webpackConfig = config.webpackConfig ? config.webpackConfig : {}
-	let alias = {}
-	let modules = null
+	let alias: { [key: string]: string } | undefined
+	let modules: string[] | undefined
 	if (webpackConfig.resolve) {
 		alias = webpackConfig.resolve.alias
 		modules = webpackConfig.resolve.modules
 	}
-	const defaultParser = file => vueDocs.parse(file, { alias, modules, jsx: config.jsxInComponents })
-	const propsParser = config.propsParser || defaultParser
+	const defaultParser = (file: string) =>
+		parse(file, { alias, modules, jsx: config.jsxInComponents })
+	const propsParser: (file: string) => ComponentDoc = config.propsParser || defaultParser
 
-	let docs = {}
+	let docs: ComponentDoc | undefined
 	let isComponentDocInVueFile = false
 	try {
-		docs = propsParser(file, source)
+		docs = propsParser(file)
 
 		const componentVueDoc = getComponentVueDoc(source, file)
 		if (componentVueDoc) {
@@ -42,7 +50,7 @@ module.exports = function(source) {
 		} else if (docs.tags) {
 			const examples = docs.tags.examples
 			if (examples) {
-				const examplePath = examples[examples.length - 1].content
+				const examplePath = (examples[examples.length - 1] as Tag).content
 				if (examples.length > 1) {
 					logger.warn(
 						`More than one @example tags specified in component ${path.relative(
@@ -65,11 +73,10 @@ module.exports = function(source) {
 
 		if (docs.methods) {
 			docs.methods.map(method => {
+				method.tags = method.tags || {}
 				method.tags.public = [
 					{
-						title: 'public',
-						description: null,
-						type: null
+						title: 'public'
 					}
 				]
 				const params = method.tags.params
@@ -87,11 +94,12 @@ module.exports = function(source) {
 		logger.warn(message)
 	}
 
+	if (!docs) return
 	const componentProps = docs.props
 	if (componentProps) {
 		// Transform the properties to an array. This will allow sorting
 		// TODO: Extract to a module
-		const propsAsArray = Object.keys(componentProps).reduce((acc, name) => {
+		const propsAsArray = Object.keys(componentProps).reduce((acc: PropDescriptor[], name) => {
 			componentProps[name].name = name
 			acc.push(componentProps[name])
 			return acc
@@ -101,7 +109,9 @@ module.exports = function(source) {
 		docs.props = sortProps(propsAsArray)
 	}
 
-	const examplesFile = config.getExampleFilename(file)
+	const examplesFile: string = config.getExampleFilename
+		? config.getExampleFilename(file)
+		: 'default'
 	docs.examples = getExamples(
 		file,
 		examplesFile,

@@ -16,7 +16,7 @@ const examplesLoader = path.resolve(__dirname, '../examples-loader.js')
  * @param {boolean} isComponentDocInVueFile
  * @returns {object|Array}
  */
-module.exports = function getExamples(
+export default function getExamples(
 	file: string,
 	examplesFile: string,
 	displayName: string,
