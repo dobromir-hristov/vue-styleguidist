@@ -149,8 +149,9 @@ describe('getDocMap', () => {
 		const docMap = getDocMap(FILES, getDocFileName, 'src')
 		// normalize path for windows users
 		Object.keys(docMap).map(k => {
-			docMap[k.replace(/\\/g, '/')] = docMap[k]
+			const path = docMap[k]
 			delete docMap[k]
+			docMap[k.replace(/\\/g, '/')] = path
 		})
 		expect(docMap).toMatchInlineSnapshot(`
 		Object {
