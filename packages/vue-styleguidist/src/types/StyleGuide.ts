@@ -1,10 +1,19 @@
 import WebpackDevServer from 'webpack-dev-server'
 import { ComponentDoc, PropDescriptor } from 'vue-docgen-api'
-import { Configuration } from 'webpack'
+import { Configuration, loader } from 'webpack'
 import { ProcessedSection, Section } from './Section'
 import { EXPAND_MODE } from './enums'
+import { Example } from './Example'
+
+export interface StyleguidistContext extends loader.LoaderContext {
+	_styleguidist: StyleGuidistConfigObject
+}
 
 export interface StyleGuidistConfigObject {
+	compilerConfig?: any
+	context?: string[]
+	jsxInExamples: boolean
+	updateExample?(p: Example, resourcePath: string): Example
 	sections?: Section[]
 	renderRootJsx?: string
 	skipComponentsWithoutExample?: boolean

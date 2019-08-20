@@ -28,7 +28,7 @@ declare module 'hash-sum' {
 }
 
 declare module 'mini-html-webpack-plugin' {
-	import { Plugin } from 'webpack'
+	import { Plugin, loader } from 'webpack'
 
 	class HtmlPlugin extends Plugin {
 		constructor(options: any)
@@ -57,4 +57,18 @@ declare module 'to-ast' {
 declare module 'common-dir' {
 	function commonDir(paths: string[]): string
 	export = commonDir
+}
+
+declare module 'css-loader' {
+	import { loader as cssLoader } from 'webpack'
+
+	const myLoader: cssLoader.Loader
+	export = myLoader
+}
+
+declare module 'style-loader' {
+	import { loader as styleLoader } from 'webpack'
+
+	const myLoader: styleLoader.Loader
+	export = myLoader
 }

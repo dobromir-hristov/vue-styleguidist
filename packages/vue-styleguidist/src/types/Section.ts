@@ -20,10 +20,12 @@ interface BaseSection {
 
 export interface Section extends BaseSection {
 	components?: string | string[]
+	sections?: Section[]
 }
 
 export interface ProcessedSection extends BaseSection {
 	name: string
 	components?: Component[]
 	content: string
+	sections: ProcessedSection[]
 }

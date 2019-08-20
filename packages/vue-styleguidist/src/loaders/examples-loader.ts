@@ -1,25 +1,29 @@
-const path = require('path')
-const filter = require('lodash/filter')
-const map = require('lodash/map')
-const values = require('lodash/values')
-const flatten = require('lodash/flatten')
-const loaderUtils = require('loader-utils')
-const generate = require('escodegen').generate
-const toAst = require('to-ast')
-const b = require('ast-types').builders
-const { parseComponent } = require('vue-template-compiler')
-const compile = require('vue-inbrowser-compiler')
-const { isCodeVueSfc } = require('vue-inbrowser-compiler-utils')
-const chunkify = require('react-styleguidist/lib/loaders/utils/chunkify').default
-const expandDefaultComponent = require('react-styleguidist/lib/loaders/utils/expandDefaultComponent')
-const getImports = require('react-styleguidist/lib/loaders/utils/getImports').default
-const requireIt = require('react-styleguidist/lib/loaders/utils/requireIt')
-const getComponentVueDoc = require('./utils/getComponentVueDoc').default
-const cleanComponentName = require('./utils/cleanComponentName').default
-const importCodeExampleFile = require('./utils/importCodeExampleFile').default
+import * as path from 'path'
+import filter from 'lodash/filter'
+import map from 'lodash/map'
+import values from 'lodash/values'
+import flatten from 'lodash/flatten'
+import loaderUtils from 'loader-utils'
+import { generate } from 'escodegen'
+import toAst from 'to-ast'
+import astTypes from 'ast-types'
+import { parseComponent } from 'vue-template-compiler'
+import compile from 'vue-inbrowser-compiler'
+import { isCodeVueSfc } from 'vue-inbrowser-compiler-utils'
+import { StyleguidistContext } from 'types/StyleGuide'
+import { Example } from 'types/Example'
+import chunkify from 'react-styleguidist/lib/loaders/utils/chunkify'
+import expandDefaultComponent from 'react-styleguidist/lib/loaders/utils/expandDefaultComponent'
+import getImports from 'react-styleguidist/lib/loaders/utils/getImports'
+import requireIt from 'react-styleguidist/lib/loaders/utils/requireIt'
+import getComponentVueDoc from './utils/getComponentVueDoc'
+import cleanComponentName from './utils/cleanComponentName'
+import importCodeExampleFile from './utils/importCodeExampleFile'
+
+const b = astTypes.builders
 
 // Hack the react scaffolding to be able to load client
-const absolutize = filepath =>
+const absolutize = (filepath: string) =>
 	path.resolve(
 		path.dirname(require.resolve('vue-styleguidist')),
 		'../loaders/utils/client',
@@ -30,27 +34,29 @@ const REQUIRE_IN_RUNTIME_PATH = absolutize('requireInRuntime')
 const EVAL_IN_CONTEXT_PATH = absolutize('evalInContext')
 const JSX_COMPILER_UTILS_PATH = require.resolve('vue-inbrowser-compiler-utils')
 
-function isVueFile(filepath) {
+function isVueFile(filepath: string) {
 	return /.vue$/.test(filepath)
 }
 
-module.exports = function examplesLoader(source) {
+export default function examplesLoader(this: StyleguidistContext, src: string) {
 	const filePath = this.request.split('!').pop()
+	let source: string | false = false
+	if (!filePath) return
 	if (isVueFile(filePath)) {
 		// if it's a vue file, the examples are in a docs block
-		source = getComponentVueDoc(source, filePath)
+		source = getComponentVueDoc(src, filePath)
 	}
 	const config = this._styleguidist
-	const { file, displayName, shouldShowDefaultExample, customLangs } =
-		loaderUtils.getOptions(this) || {}
+	const options = loaderUtils.getOptions(this)
+	const { file, displayName, shouldShowDefaultExample, customLangs } = options
 
 	const cleanDisplayName = displayName ? cleanComponentName(displayName) : undefined
 	// Replace placeholders (__COMPONENT__) with the passed-in component name
-	if (shouldShowDefaultExample) {
+	if (shouldShowDefaultExample && source) {
 		source = expandDefaultComponent(source, cleanDisplayName)
 	}
 
-	const updateExample = props => {
+	const updateExample = (props: Example) => {
 		const p = importCodeExampleFile(props, this.resourcePath, this)
 		return config.updateExample ? config.updateExample(p, this.resourcePath) : p
 	}
@@ -58,7 +64,7 @@ module.exports = function examplesLoader(source) {
 	// Load examples
 	const examples = chunkify(source, updateExample, customLangs)
 
-	const getScript = code => {
+	const getScript = (code: string): string => {
 		// if in JSX mode just parse code as is
 		if (config.jsxInExamples) {
 			return code
@@ -74,7 +80,7 @@ module.exports = function examplesLoader(source) {
 		return code.split(/\n[\t ]*</)[0]
 	}
 
-	const getExampleLiveImports = source => getImports(getScript(source))
+	const getExampleLiveImports = (source: string) => getImports(getScript(source))
 
 	// Find all import statements and require() calls in examples to make them
 	// available in webpack context at runtime.

@@ -3,6 +3,7 @@ import commonDir from 'common-dir'
 import { generate } from 'escodegen'
 import toAst from 'to-ast'
 import createLogger from 'glogg'
+import { StyleguidistContext } from 'types/StyleGuide'
 import fileExistsCaseInsensitive from 'react-styleguidist/lib/scripts/utils/findFileCaseInsensitive'
 import getAllContentPages from 'react-styleguidist/lib/loaders/utils/getAllContentPages'
 import getComponentFilesFromSections from 'react-styleguidist/lib/loaders/utils/getComponentFilesFromSections'
@@ -11,7 +12,6 @@ import filterComponentsWithExample from 'react-styleguidist/lib/loaders/utils/fi
 import slugger from 'react-styleguidist/lib/loaders/utils/slugger'
 import requireIt from 'react-styleguidist/lib/loaders/utils/requireIt'
 import getSections from './utils/getSections'
-import { StyleguidistContext } from './vuedoc-loader'
 
 const logger = createLogger('vsg')
 

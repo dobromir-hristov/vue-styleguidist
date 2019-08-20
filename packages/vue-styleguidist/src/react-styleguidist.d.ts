@@ -77,6 +77,25 @@ declare module 'react-styleguidist/lib/loaders/utils/filterComponentsWithExample
 	export = filterComponentsWithExample
 }
 
+declare module 'react-styleguidist/lib/loaders/utils/chunkify' {
+	import { Example } from 'types/Example'
+
+	function chunkify(
+		markdown: string | false,
+		updateExample: (p: Example, resourcePath: string) => Example,
+		playgroundLangs: string[]
+	): any[]
+	export default chunkify
+}
+declare module 'react-styleguidist/lib/loaders/utils/expandDefaultComponent' {
+	function expandDefaultComponent(source: string, cleanDisplayName?: string): string
+	export default expandDefaultComponent
+}
+declare module 'react-styleguidist/lib/loaders/utils/getImports' {
+	const getImports: (code: string) => string[]
+	export = getImports
+}
+
 // script
 
 declare module 'react-styleguidist/lib/scripts/make-webpack-config' {

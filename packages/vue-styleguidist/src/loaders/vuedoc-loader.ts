@@ -1,10 +1,9 @@
 import * as path from 'path'
-import { loader } from 'webpack'
 import { generate } from 'escodegen'
 import toAst from 'to-ast'
 import createLogger from 'glogg'
 import { parse, ComponentDoc, Tag, PropDescriptor } from 'vue-docgen-api'
-import { StyleGuidistConfigObject } from 'types/StyleGuide'
+import { StyleguidistContext } from 'types/StyleGuide'
 import defaultSortProps from 'react-styleguidist/lib/loaders/utils/sortProps'
 import requireIt from 'react-styleguidist/lib/loaders/utils/requireIt'
 import getExamples from './utils/getExamples'
@@ -12,10 +11,6 @@ import getComponentVueDoc from './utils/getComponentVueDoc'
 
 const logger = createLogger('vsg')
 const examplesLoader = path.resolve(__dirname, './examples-loader.js')
-
-export interface StyleguidistContext extends loader.LoaderContext {
-	_styleguidist: StyleGuidistConfigObject
-}
 
 export default function(this: StyleguidistContext, source: string) {
 	const file = this.request.split('!').pop()
