@@ -8,7 +8,7 @@ import webpackDevServerUtils from 'react-dev-utils/WebpackDevServerUtils'
 import openBrowser from 'react-dev-utils/openBrowser'
 import setupLogger from 'react-styleguidist/lib/scripts/logger'
 import { Stats } from 'webpack'
-import { StyleGuidistConfigObject } from 'types/StyleGuide'
+import { ProcessedStyleGuidistConfigObject } from 'types/StyleGuide'
 
 const consts = require('./consts')
 const logger = require('glogg')('vsg')
@@ -17,7 +17,7 @@ const logger = require('glogg')('vsg')
  * @param {object} config
  * @return {object}
  */
-export function updateConfig(config: StyleGuidistConfigObject) {
+export function updateConfig(config: ProcessedStyleGuidistConfigObject) {
 	// Set verbose mode from config option or command line switch
 	config.verbose = config.verbose || !!process.env.VUESG_VERBOSE
 
@@ -27,7 +27,7 @@ export function updateConfig(config: StyleGuidistConfigObject) {
 	return config
 }
 
-export function commandBuild(config: StyleGuidistConfigObject) {
+export function commandBuild(config: ProcessedStyleGuidistConfigObject) {
 	console.log('Building style guide...')
 
 	const build = require('./build').default
@@ -58,7 +58,7 @@ export function commandBuild(config: StyleGuidistConfigObject) {
 	return compiler
 }
 
-export function commandServer(config: StyleGuidistConfigObject, open?: boolean) {
+export function commandServer(config: ProcessedStyleGuidistConfigObject, open?: boolean) {
 	let spinner: ora.Ora
 
 	const server = require('./server').default
@@ -168,7 +168,7 @@ function printServerInstructions(urls: webpackDevServerUtils.Urls, publicPath: s
 /**
  * @param {object} config
  */
-function printBuildInstructions(config: StyleGuidistConfigObject) {
+function printBuildInstructions(config: ProcessedStyleGuidistConfigObject) {
 	console.log('Style guide published to:\n' + kleur.underline(config.styleguideDir || ''))
 }
 

@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { Example } from 'types/Example'
+import { Example } from '../../types/Example'
 
 /**
  * Extract example from file

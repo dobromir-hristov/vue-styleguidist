@@ -1,11 +1,11 @@
 import webpack, { Configuration } from 'webpack'
 import WebpackDevServer from 'webpack-dev-server'
 import merge from 'webpack-merge'
-import { StyleGuidistConfigObject } from 'types/StyleGuide'
+import { ProcessedStyleGuidistConfigObject } from 'types/StyleGuide'
 import makeWebpackConfig from './make-webpack-config'
 
 export default function createServer(
-	config: StyleGuidistConfigObject,
+	config: ProcessedStyleGuidistConfigObject,
 	env: 'development' | 'production' | 'none'
 ) {
 	const webpackConfig: Configuration = makeWebpackConfig(config, env)

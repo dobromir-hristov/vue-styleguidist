@@ -5,7 +5,7 @@ import examplesLoader from '../examples-loader'
 
 jest.mock('vue-inbrowser-compiler', () => {
 	return {
-		isCodeVueSfc: code => /<script/.test(code)
+		isCodeVueSfc: (code: string) => /<script/.test(code)
 	}
 })
 
@@ -31,7 +31,7 @@ text
 			request: 'Readme.md',
 			query: getQuery(),
 			_styleguidist: {}
-		},
+		} as any,
 		exampleMarkdown
 	)
 
@@ -55,11 +55,12 @@ it('should replace all occurrences of __COMPONENT__ with provided query.displayN
 			request: 'Readme.md',
 			query: getQuery({ shouldShowDefaultExample: true }),
 			_styleguidist: {}
-		},
+		} as any,
 		exampleMarkdown
 	)
 	expect(result).not.toMatch(/__COMPONENT__/)
-	expect(result.match(/<div>(.*?)<\/div>/)[0]).toMatchInlineSnapshot(`
+	const mth = result.match(/<div>(.*?)<\/div>/)
+	expect(mth && mth[0]).toMatchInlineSnapshot(`
 
 <div>
   \\n\\t
@@ -98,7 +99,7 @@ it('should pass updateExample function from config to chunkify', () => {
 			_styleguidist: {
 				updateExample
 			}
-		},
+		} as any,
 		exampleMarkdown
 	)
 	expect(updateExample).toHaveBeenCalledWith(
@@ -126,7 +127,7 @@ Two:
 			request: 'Readme.md',
 			query: getQuery(),
 			_styleguidist: {}
-		},
+		} as any,
 		exampleMarkdown
 	)
 
@@ -148,7 +149,7 @@ One:
 			request: 'Readme.md',
 			query: getQuery(),
 			_styleguidist: {}
-		},
+		} as any,
 		exampleMarkdown
 	)
 
@@ -167,7 +168,7 @@ it('should work with multiple JSX element on the root level', () => {
 			request: 'Readme.md',
 			query: getQuery(),
 			_styleguidist: {}
-		},
+		} as any,
 		exampleMarkdown
 	)
 
@@ -184,7 +185,7 @@ it('should works for any Markdown file, without a current component', () => {
 			request: 'Readme.md',
 			query: '',
 			_styleguidist: {}
-		},
+		} as any,
 		exampleMarkdown
 	)
 
@@ -219,7 +220,7 @@ One:
 			request: 'Readme.md',
 			query: '',
 			_styleguidist: {}
-		},
+		} as any,
 		exampleMarkdown
 	)
 

@@ -6,7 +6,7 @@ import isPlainObject from 'lodash/isPlainObject'
 import StyleguidistError from 'react-styleguidist/lib/scripts/utils/error'
 import sanitizeConfig from 'react-styleguidist/lib/scripts/utils/sanitizeConfig'
 import schema from './schemas/config'
-import { StyleGuidistConfigObject } from '../types/StyleGuide'
+import { ProcessedStyleGuidistConfigObject } from '../types/StyleGuide'
 
 const CONFIG_FILENAME = 'styleguide.config.js'
 
@@ -18,11 +18,11 @@ const CONFIG_FILENAME = 'styleguide.config.js'
  * @returns {object}
  */
 export default function getConfig(
-	configParam: string | StyleGuidistConfigObject | { serverPort?: string | number },
-	update?: (conf: StyleGuidistConfigObject | {}) => StyleGuidistConfigObject
-) {
+	configParam: string | ProcessedStyleGuidistConfigObject | { serverPort?: string | number },
+	update?: (conf: ProcessedStyleGuidistConfigObject | {}) => ProcessedStyleGuidistConfigObject
+): ProcessedStyleGuidistConfigObject {
 	let configFilepath
-	let config: StyleGuidistConfigObject | { serverPort?: string | number } = {}
+	let config: ProcessedStyleGuidistConfigObject | { serverPort?: string | number } = {}
 	if (isString(configParam)) {
 		// Load config from a given file
 		configFilepath = path.resolve(process.cwd(), configParam)
@@ -52,7 +52,7 @@ export default function getConfig(
 	}
 
 	try {
-		return sanitizeConfig(config as StyleGuidistConfigObject, schema, configDir)
+		return sanitizeConfig(config as ProcessedStyleGuidistConfigObject, schema, configDir)
 	} catch (exception) {
 		/* eslint-disable */
 		console.log(exception instanceof StyleguidistError, exception.constructor.name)

@@ -1,8 +1,9 @@
+import * as b from '@babel/types'
 import * as fs from 'fs'
 import * as path from 'path'
 import qss from 'qss'
 import requireIt from 'react-styleguidist/lib/loaders/utils/requireIt'
-import { Example } from 'types/Example'
+import { Example } from '../../types/Example'
 
 const examplesLoader = path.resolve(__dirname, '../examples-loader.js')
 
@@ -19,10 +20,10 @@ const examplesLoader = path.resolve(__dirname, '../examples-loader.js')
 export default function getExamples(
 	file: string,
 	examplesFile: string | false,
-	displayName: string,
+	displayName?: string,
 	defaultExample?: string,
 	isComponentDocInVueFile?: boolean
-): Example[] | null {
+): { require: string; toAST: () => b.Node } | Example[] | null {
 	const examplesFileToLoad = examplesFile || defaultExample
 	if (!examplesFileToLoad) {
 		return null

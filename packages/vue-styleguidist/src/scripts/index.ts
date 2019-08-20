@@ -1,7 +1,7 @@
 // Make sure user has webpack installed
 import 'react-styleguidist/lib/scripts/utils/ensureWebpack'
 import { Stats } from 'webpack'
-import { StyleGuidistConfigObject } from 'types/StyleGuide'
+import { ProcessedStyleGuidistConfigObject } from 'types/StyleGuide'
 import setupLogger from 'react-styleguidist/lib/scripts/logger'
 import build from './build'
 import server from './server'
@@ -17,10 +17,10 @@ import * as binutils from './binutils'
  * @returns {object} API.
  */
 export default function(
-	config: StyleGuidistConfigObject,
-	updateConfig: (conf: StyleGuidistConfigObject) => void
+	config: ProcessedStyleGuidistConfigObject,
+	updateConfig: (conf: ProcessedStyleGuidistConfigObject) => void
 ) {
-	config = getConfig(config, (config: StyleGuidistConfigObject) => {
+	config = getConfig(config, (config: ProcessedStyleGuidistConfigObject) => {
 		setupLogger(config.logger, config.verbose, {})
 		if (typeof updateConfig === 'function') {
 			updateConfig(config)
@@ -36,7 +36,11 @@ export default function(
 		 * @return {Compiler} Webpack Compiler instance.
 		 */
 		build(
-			callback: (err: Error | undefined, config: StyleGuidistConfigObject, stats: Stats) => void
+			callback: (
+				err: Error | undefined,
+				config: ProcessedStyleGuidistConfigObject,
+				stats: Stats
+			) => void
 		) {
 			return build(config, (err, stats) => callback(err, config, stats))
 		},
@@ -48,7 +52,7 @@ export default function(
 		 * @return {ServerInfo.App} Webpack-Dev-Server.
 		 * @return {ServerInfo.Compiler} Webpack Compiler instance.
 		 */
-		server(callback: (err: Error | undefined, config: StyleGuidistConfigObject) => void) {
+		server(callback: (err: Error | undefined, config: ProcessedStyleGuidistConfigObject) => void) {
 			return server(config, err => callback(err, config))
 		},
 

@@ -3,7 +3,6 @@ import commonDir from 'common-dir'
 import { generate } from 'escodegen'
 import toAst from 'to-ast'
 import createLogger from 'glogg'
-import { StyleguidistContext } from 'types/StyleGuide'
 import fileExistsCaseInsensitive from 'react-styleguidist/lib/scripts/utils/findFileCaseInsensitive'
 import getAllContentPages from 'react-styleguidist/lib/loaders/utils/getAllContentPages'
 import getComponentFilesFromSections from 'react-styleguidist/lib/loaders/utils/getComponentFilesFromSections'
@@ -11,6 +10,7 @@ import getComponentPatternsFromSections from 'react-styleguidist/lib/loaders/uti
 import filterComponentsWithExample from 'react-styleguidist/lib/loaders/utils/filterComponentsWithExample'
 import slugger from 'react-styleguidist/lib/loaders/utils/slugger'
 import requireIt from 'react-styleguidist/lib/loaders/utils/requireIt'
+import { StyleguidistContext } from '../types/StyleGuide'
 import getSections from './utils/getSections'
 
 const logger = createLogger('vsg')
@@ -33,8 +33,8 @@ const CLIENT_CONFIG_OPTIONS = [
 	'jsxInExamples'
 ]
 
-module.exports = function() {}
-module.exports.pitch = function(this: StyleguidistContext) {
+export default function() {}
+export function pitch(this: StyleguidistContext, source: string): string {
 	// Clear cache so it would detect new or renamed files
 	fileExistsCaseInsensitive.clearCache()
 
@@ -42,7 +42,7 @@ module.exports.pitch = function(this: StyleguidistContext) {
 	slugger.reset()
 
 	const config = this._styleguidist
-	if (!config.sections) return
+	if (!config.sections) return ''
 
 	let sections = getSections(config.sections, config, 0)
 	if (config.skipComponentsWithoutExample) {
@@ -65,7 +65,7 @@ module.exports.pitch = function(this: StyleguidistContext) {
 
 	// Setup Webpack context dependencies to enable hot reload when adding new files
 	if (config.contextDependencies) {
-		config.contextDependencies.forEach(dir => this.addContextDependency(dir))
+		config.contextDependencies.forEach((dir: string) => this.addContextDependency(dir))
 	} else if (allComponentFiles.length > 0) {
 		// Use common parent directory of all components as a context
 		this.addContextDependency(commonDir(allComponentFiles))

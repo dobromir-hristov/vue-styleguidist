@@ -8,7 +8,7 @@ export interface ComponentProps {
 export interface Component {
 	filepath?: string
 	slug?: string
-	pathLine?: JSX.Element
+	pathLine?: string
 	hasExamples?: boolean
 	name?: string
 	props: ComponentProps

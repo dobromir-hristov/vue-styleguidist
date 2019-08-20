@@ -59,7 +59,7 @@ declare module 'react-styleguidist/lib/loaders/utils/getComponentFilesFromSectio
 
 	function getComponentFilesFromSections(
 		sections: SectionFiles[],
-		componentDir: string,
+		componentDir?: string,
 		ignore?: string | string[]
 	): string[]
 	export = getComponentFilesFromSections
@@ -100,9 +100,9 @@ declare module 'react-styleguidist/lib/loaders/utils/getImports' {
 
 declare module 'react-styleguidist/lib/scripts/make-webpack-config' {
 	import { Configuration } from 'webpack'
-	import { StyleGuidistConfigObject } from 'types/StyleGuide'
+	import { ProcessedStyleGuidistConfigObject } from 'types/StyleGuide'
 
-	const makeWebpackConfig: (config: StyleGuidistConfigObject, env: string) => Configuration
+	const makeWebpackConfig: (config: ProcessedStyleGuidistConfigObject, env: string) => Configuration
 	export default makeWebpackConfig
 }
 
@@ -138,7 +138,7 @@ declare module 'react-styleguidist/lib/scripts/utils/error' {
 }
 
 declare module 'react-styleguidist/lib/scripts/utils/sanitizeConfig' {
-	import { StyleGuidistConfigObject as StyleGuidistConfigObjectSanitizeConfig } from 'types/StyleGuide'
+	import { ProcessedStyleGuidistConfigObject as StyleGuidistConfigObjectSanitizeConfig } from 'types/StyleGuide'
 
 	function sanitizeConfig(
 		config: StyleGuidistConfigObjectSanitizeConfig,

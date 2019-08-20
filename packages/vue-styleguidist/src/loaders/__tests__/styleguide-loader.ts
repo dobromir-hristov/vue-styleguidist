@@ -1,12 +1,12 @@
 import vm from 'vm'
 import path from 'path'
 import { readFileSync } from 'fs'
-import styleguideLoader from '../styleguide-loader'
+import * as styleguideLoader from '../styleguide-loader'
 
 /* eslint-disable quotes */
 describe('styleguide-loader', () => {
-	const file = path.resolve(__dirname, '../../../../test/components/Button.vue')
-	const configDir = path.resolve(__dirname, '../../../../test')
+	const file = path.resolve(__dirname, '../../../../../test/components/Button.vue')
+	const configDir = path.resolve(__dirname, '../../../../../test')
 
 	it('should return valid, parsable JS', () => {
 		const result = styleguideLoader.pitch.call(
@@ -16,10 +16,10 @@ describe('styleguide-loader', () => {
 					sections: [{ components: 'components/**/*.js' }],
 					configDir,
 					getExampleFilename: () => 'Readme.md',
-					getComponentPathLine: filepath => filepath
+					getComponentPathLine: (filepath: string) => filepath
 				},
 				addContextDependency: () => {}
-			},
+			} as any,
 			readFileSync(file, 'utf8')
 		)
 		expect(result).toBeTruthy()
@@ -36,11 +36,11 @@ describe('styleguide-loader', () => {
 					sections: [{ components: 'components/**/*.js' }],
 					configDir,
 					getExampleFilename: () => 'Readme.md',
-					getComponentPathLine: filepath => filepath,
+					getComponentPathLine: (filepath: string) => filepath,
 					contextDependencies
 				},
 				addContextDependency
-			},
+			} as any,
 			readFileSync(file, 'utf8')
 		)
 		expect(addContextDependency).toHaveBeenCalledTimes(2)

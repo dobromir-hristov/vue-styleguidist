@@ -6,7 +6,7 @@ import { EXPAND_MODE } from './enums'
 import { Example } from './Example'
 
 export interface StyleguidistContext extends loader.LoaderContext {
-	_styleguidist: StyleGuidistConfigObject
+	_styleguidist: ProcessedStyleGuidistConfigObject
 }
 
 export interface StyleGuidistConfigObject {
@@ -20,12 +20,16 @@ export interface StyleGuidistConfigObject {
 	updateDocs?(doc: ComponentDoc, file: string): ComponentDoc
 	defaultExample?: string
 	getExampleFilename?(file: string): string
+	getComponentPathLine?(file: string): string
 	sortProps?(props: PropDescriptor[]): { [key: string]: PropDescriptor }
 	propsParser?(file: string): ComponentDoc
 	jsxInComponents?: boolean
 	contextDependencies?: string[]
-	printBuildInstructions?(config: StyleGuidistConfigObject): void
-	printServerInstructions?(config: StyleGuidistConfigObject, options: { isHttps: boolean }): void
+	printBuildInstructions?(config: ProcessedStyleGuidistConfigObject): void
+	printServerInstructions?(
+		config: ProcessedStyleGuidistConfigObject,
+		options: { isHttps: boolean }
+	): void
 	showUsage?: boolean
 	components?: string
 	highlightTheme?: { theme: string }
@@ -33,12 +37,12 @@ export interface StyleGuidistConfigObject {
 	pagePerSection?: boolean
 	locallyRegisterComponents?: boolean
 	ignore?: string | string[]
-	configDir: string
-	usageMode: EXPAND_MODE
-	exampleMode: EXPAND_MODE
-	serverPort: number
-	serverHost: string
-	assetsDir: string
+	configDir?: string
+	usageMode?: EXPAND_MODE
+	exampleMode?: EXPAND_MODE
+	serverPort?: number
+	serverHost?: string
+	assetsDir?: string
 	styleguideComponents?: { [name: string]: string }
 	simpleEditor?: boolean
 	copyCodeButton?: boolean
@@ -48,13 +52,13 @@ export interface StyleGuidistConfigObject {
 	showCode?: boolean
 	verbose?: boolean
 	minimize?: boolean
-	require: string[]
-	webpackConfig: Configuration
-	editorConfig: {
+	require?: string[]
+	webpackConfig?: Configuration
+	editorConfig?: {
 		theme: string
 	}
-	mountPointId: string
-	template: string
+	mountPointId?: string
+	template?: string
 	styleguidistDir?: string
 	configureServer?: (server: WebpackDevServer, env: string) => string
 	dangerouslyUpdateWebpackConfig?(
@@ -68,9 +72,27 @@ export interface StyleGuidistConfigObject {
 	}
 }
 
+export interface ProcessedStyleGuidistConfigObject extends StyleGuidistConfigObject {
+	getExampleFilename(file: string): string
+	getComponentPathLine(file: string): string
+	configDir: string
+	usageMode: EXPAND_MODE
+	exampleMode: EXPAND_MODE
+	serverPort: number
+	serverHost: string
+	assetsDir: string
+	require: string[]
+	webpackConfig: Configuration
+	editorConfig: {
+		theme: string
+	}
+	mountPointId: string
+	template: string
+}
+
 export interface StyleGuideObject {
 	sections: ProcessedSection[]
-	config: StyleGuidistConfigObject
+	config: ProcessedStyleGuidistConfigObject
 	renderRootJsx: any
 	welcomeScreen: any
 	patterns: any

@@ -10,12 +10,12 @@ import astTypes from 'ast-types'
 import { parseComponent } from 'vue-template-compiler'
 import compile from 'vue-inbrowser-compiler'
 import { isCodeVueSfc } from 'vue-inbrowser-compiler-utils'
-import { StyleguidistContext } from 'types/StyleGuide'
-import { Example } from 'types/Example'
 import chunkify from 'react-styleguidist/lib/loaders/utils/chunkify'
 import expandDefaultComponent from 'react-styleguidist/lib/loaders/utils/expandDefaultComponent'
 import getImports from 'react-styleguidist/lib/loaders/utils/getImports'
 import requireIt from 'react-styleguidist/lib/loaders/utils/requireIt'
+import { StyleguidistContext } from '../types/StyleGuide'
+import { Example } from '../types/Example'
 import getComponentVueDoc from './utils/getComponentVueDoc'
 import cleanComponentName from './utils/cleanComponentName'
 import importCodeExampleFile from './utils/importCodeExampleFile'
@@ -38,16 +38,16 @@ function isVueFile(filepath: string) {
 	return /.vue$/.test(filepath)
 }
 
-export default function examplesLoader(this: StyleguidistContext, src: string) {
+export default function examplesLoader(this: StyleguidistContext, src: string): string {
 	const filePath = this.request.split('!').pop()
 	let source: string | false = src
-	if (!filePath) return
+	if (!filePath) return ''
 	if (isVueFile(filePath)) {
 		// if it's a vue file, the examples are in a docs block
 		source = getComponentVueDoc(src, filePath)
 	}
 	const config = this._styleguidist
-	const options = loaderUtils.getOptions(this)
+	const options = loaderUtils.getOptions(this) || {}
 	const { file, displayName, shouldShowDefaultExample, customLangs } = options
 
 	const cleanDisplayName = displayName ? cleanComponentName(displayName) : undefined
