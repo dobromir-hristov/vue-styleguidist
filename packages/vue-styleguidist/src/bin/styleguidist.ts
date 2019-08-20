@@ -1,20 +1,22 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 
-const minimist = require('minimist')
-const kleur = require('kleur')
-const StyleguidistError = require('react-styleguidist/lib/scripts/utils/error')
+import minimist from 'minimist'
+import kleur from 'kleur'
+import createLogger from 'glogg'
+import StyleguidistError from 'react-styleguidist/lib/scripts/utils/error'
+import { StyleGuidistConfigObject } from 'types/StyleGuide'
+import getConfig from '../scripts/config'
+import consts from '../scripts/consts'
+import * as binutils from '../scripts/binutils'
 
-const getConfig = require('../scripts/config')
-const consts = require('../scripts/consts')
-const binutils = require('../scripts/binutils')
-const logger = require('glogg')('vsg-bin')
+const logger = createLogger('vsg-bin')
 
 const argv = minimist(process.argv.slice(2))
 const command = argv._[0]
 
 // Do not show nasty stack traces for Styleguidist errors
-process.on('uncaughtException', err => {
+process.on('uncaughtException', (err: any) => {
 	if (err.code === 'EADDRINUSE') {
 		binutils.printErrorWithLink(
 			`Another server is running at port ${
@@ -25,7 +27,9 @@ process.on('uncaughtException', err => {
 		)
 	} else if (err instanceof StyleguidistError) {
 		console.error(kleur.bold.red(err.message))
-		logger.debug(err.stack)
+		if (err.stack) {
+			logger.debug(err.stack)
+		}
 	} else {
 		console.error(err.toString())
 		console.error(err.stack)
@@ -41,9 +45,24 @@ const env = command === 'build' ? 'production' : 'development'
 process.env.NODE_ENV = process.env.NODE_ENV || env
 
 // Load style guide config
-let config
+let config: StyleGuidistConfigObject
 try {
 	config = getConfig(argv.config, binutils.updateConfig)
+
+	process.env.VUESG_VERBOSE = argv.verbose
+
+	binutils.verbose('Styleguidist config:', config)
+
+	switch (command) {
+		case 'build':
+			binutils.commandBuild(config)
+			break
+		case 'server':
+			binutils.commandServer(config, argv.open)
+			break
+		default:
+			binutils.commandHelp()
+	}
 } catch (err) {
 	if (err instanceof StyleguidistError) {
 		const link = consts.DOCS_CONFIG + (err.anchor ? `#${err.anchor.toLowerCase()}` : '')
@@ -56,19 +75,4 @@ try {
 	} else {
 		throw err
 	}
-}
-
-process.env.VUESG_VERBOSE = !!argv.verbose
-
-binutils.verbose('Styleguidist config:', config)
-
-switch (command) {
-	case 'build':
-		binutils.commandBuild(config)
-		break
-	case 'server':
-		binutils.commandServer(config, argv.open)
-		break
-	default:
-		binutils.commandHelp()
 }

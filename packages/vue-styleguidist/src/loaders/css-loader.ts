@@ -4,4 +4,4 @@ does that for example). This way we can bypass Webpack resolver and just use Nod
 require('!!../../loaders/style-loader!../../loaders/css-loader!codemirror/lib/codemirror.css');
  */
 
-export { default } from 'css-loader'
+module.exports = require('css-loader')

@@ -131,6 +131,8 @@ declare module 'react-styleguidist/lib/scripts/utils/getUserPackageJson' {
 declare module 'react-styleguidist/lib/scripts/utils/error' {
 	class StyleguidistError extends Error {
 		constructor(message: string, extra?: string)
+		anchor: string
+		extra: string
 	}
 	export = StyleguidistError
 }

@@ -111,7 +111,7 @@ export default function(this: StyleguidistContext, source: string) {
 		file,
 		examplesFile,
 		docs.displayName,
-		config.defaultExample,
+		config.defaultExample || '',
 		isComponentDocInVueFile
 	)
 

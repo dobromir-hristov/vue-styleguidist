@@ -12,13 +12,13 @@ export interface StyleguidistContext extends loader.LoaderContext {
 export interface StyleGuidistConfigObject {
 	compilerConfig?: any
 	context?: string[]
-	jsxInExamples: boolean
+	jsxInExamples?: boolean
 	updateExample?(p: Example, resourcePath: string): Example
 	sections?: Section[]
 	renderRootJsx?: string
 	skipComponentsWithoutExample?: boolean
 	updateDocs?(doc: ComponentDoc, file: string): ComponentDoc
-	defaultExample: string
+	defaultExample?: string
 	getExampleFilename?(file: string): string
 	sortProps?(props: PropDescriptor[]): { [key: string]: PropDescriptor }
 	propsParser?(file: string): ComponentDoc
