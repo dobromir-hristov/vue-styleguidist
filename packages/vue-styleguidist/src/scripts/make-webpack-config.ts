@@ -171,7 +171,7 @@ export default function(
 	const sourceSrc = path.resolve(sourceDir, RSG_COMPONENTS_ALIAS)
 	require('fs')
 		.readdirSync(sourceSrc)
-		.forEach(function(component: string) {
+		.forEach((component: string) => {
 			webpackAlias[`${RSG_COMPONENTS_ALIAS}/${component}`] = path.resolve(sourceSrc, component)
 			// plus in order to avoid cirular references, add an extra ref to the defaults
 			// so that custom components can reference their defaults
@@ -186,14 +186,13 @@ export default function(
 		'ReactComponent/ReactComponent',
 		'StyleGuide/StyleGuideRenderer'
 	]
-	const customComponents: { [originalPath: string]: string } = custComp.reduce(function(
-		acc: { [originalPath: string]: string },
-		comp
-	) {
-		acc[comp] = `Vsg${comp}`
-		return acc
-	},
-	{})
+	const customComponents: { [originalPath: string]: string } = custComp.reduce(
+		(acc: { [originalPath: string]: string }, comp) => {
+			acc[comp] = `Vsg${comp}`
+			return acc
+		},
+		{}
+	)
 
 	if (config.codeSplit) {
 		customComponents['Playground/Playground'] = 'PlaygroundAsync/PlaygroundAsync'

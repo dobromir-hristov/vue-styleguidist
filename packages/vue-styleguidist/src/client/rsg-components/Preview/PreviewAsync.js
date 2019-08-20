@@ -7,7 +7,7 @@ import { DocumentedComponentContext } from '../VsgReactComponent/ReactComponent'
 import { RenderJsxContext } from '../../utils/renderStyleguide'
 import cleanComponentName from '../../utils/cleanComponentName'
 
-class Preview extends Component {
+class PreviewAsync extends Component {
 	static propTypes = {
 		code: PropTypes.shape({
 			raw: PropTypes.string.isRequired,
@@ -202,7 +202,9 @@ export default function PreviewWithComponent(props) {
 		<RenderJsxContext.Consumer>
 			{renderRootJsx => (
 				<DocumentedComponentContext.Consumer>
-					{component => <Preview {...props} component={component} renderRootJsx={renderRootJsx} />}
+					{component => (
+						<PreviewAsync {...props} component={component} renderRootJsx={renderRootJsx} />
+					)}
 				</DocumentedComponentContext.Consumer>
 			)}
 		</RenderJsxContext.Consumer>

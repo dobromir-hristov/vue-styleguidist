@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 
+import { stringify } from 'q-i'
 import kleur from 'kleur'
 import ora from 'ora'
 import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages'
@@ -309,5 +310,5 @@ function printNoLoaderError(errors: string[]) {
  * @param {object} object
  */
 export function verbose(header: string, object: any) {
-	logger.debug(kleur.bold(header) + '\n\n' + JSON.stringify(object, null, 2))
+	logger.debug(kleur.bold(header) + '\n\n' + stringify(object))
 }

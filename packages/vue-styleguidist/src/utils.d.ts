@@ -72,3 +72,7 @@ declare module 'style-loader' {
 	const myLoader: styleLoader.Loader
 	export = myLoader
 }
+
+declare module 'q-i' {
+	export const stringify: (obj: any) => string
+}
