@@ -3,7 +3,7 @@ import examplesLoader from '../examples-loader'
 
 /* eslint-disable no-new-func */
 
-jest.mock('vue-inbrowser-compiler', () => {
+jest.mock('vue-inbrowser-compiler-utils', () => {
 	return {
 		isCodeVueSfc: (code: string) => /<script/.test(code)
 	}
@@ -195,7 +195,7 @@ it('should works for any Markdown file, without a current component', () => {
 })
 
 it('should import external dependency in a vue component example', () => {
-	jest.mock('vue-inbrowser-compiler', () => {
+	jest.mock('vue-inbrowser-compiler-utils', () => {
 		return {
 			isCodeVueSfc: () => true
 		}
