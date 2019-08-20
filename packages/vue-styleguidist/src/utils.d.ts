@@ -1,4 +1,5 @@
 /* eslint-disable import/no-duplicates */
+/* eslint-disable import/prefer-default-export */
 
 declare module 'glogg' {
 	interface GloggLogger {
@@ -39,4 +40,11 @@ declare module 'mini-html-webpack-plugin' {
 declare module '@vxna/mini-html-webpack-template' {
 	function template(...args: any[]): string
 	export = template
+}
+
+declare module 'findup' {
+	const findup: {
+		sync(cwd: string, path: string): string
+	}
+	export = findup
 }

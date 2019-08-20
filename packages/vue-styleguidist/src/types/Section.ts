@@ -2,12 +2,12 @@ import { EXPAND_MODE } from './enums'
 import { Component } from './Component'
 
 interface BaseSection {
-	name: string
+	name?: string
 	visibleName?: string
 	components?: any
 	sections?: BaseSection[]
 	ignore?: string | string[]
-	content: string
+	content?: string
 	sectionDepth?: number
 	description?: string
 	exampleMode?: EXPAND_MODE
@@ -23,5 +23,7 @@ export interface Section extends BaseSection {
 }
 
 export interface ProcessedSection extends BaseSection {
+	name: string
 	components?: Component[]
+	content: string
 }

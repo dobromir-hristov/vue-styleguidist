@@ -1,7 +1,7 @@
 import { StyleGuidistConfigObject } from 'types/StyleGuide'
 import createServer from './create-server'
 
-export default function server(config: StyleGuidistConfigObject, callback: () => void) {
+export default function server(config: StyleGuidistConfigObject, callback: (err?: Error) => void) {
 	const env = 'development'
 	const serverInfo = createServer(config, env)
 

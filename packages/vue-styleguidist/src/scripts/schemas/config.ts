@@ -1,21 +1,25 @@
 // If you want to access any of these options in React, don’t forget to update CLIENT_CONFIG_OPTIONS array
 // in loaders/styleguide-loader.js
+import path from 'path'
+import { Configuration } from 'webpack'
+import startCase from 'lodash/startCase'
+import kleur from 'kleur'
+import loggerMaker from 'glogg'
+import { StyleGuidistConfigObject } from 'types/StyleGuide'
+import { Section } from 'types/Section'
+import fileExistsCaseInsensitive from 'react-styleguidist/lib/scripts/utils/findFileCaseInsensitive'
+import getUserPackageJson from 'react-styleguidist/lib/scripts/utils/getUserPackageJson'
+import StyleguidistError from 'react-styleguidist/lib/scripts/utils/error'
+import findUserWebpackConfig from '../utils/findUserWebpackConfig'
+import consts from '../consts'
+
+const logger = loggerMaker('vsg')
 
 const DEFAULT_COMPONENTS_PATTERN = `src/{components,Components}/**/*.vue`
 
-const path = require('path')
-const startCase = require('lodash/startCase')
-const kleur = require('kleur')
-const logger = require('glogg')('vsg')
-const fileExistsCaseInsensitive = require('react-styleguidist/lib/scripts/utils/findFileCaseInsensitive')
-const getUserPackageJson = require('react-styleguidist/lib/scripts/utils/getUserPackageJson')
-const StyleguidistError = require('react-styleguidist/lib/scripts/utils/error')
-const findUserWebpackConfig = require('../utils/findUserWebpackConfig')
-const consts = require('../consts')
-
 const MODES = ['collapse', 'expand', 'hide'].map(m => ({ value: m, name: m }))
 
-module.exports = {
+export default {
 	assetsDir: {
 		uitype: 'string',
 		message: 'Assets Directory',
@@ -48,7 +52,7 @@ module.exports = {
 		example: 'components/**/[A-Z]*.vue'
 	},
 	configDir: {
-		process: (value, config, rootDir) => rootDir
+		process: (value: string, config: StyleGuidistConfigObject, rootDir: string) => rootDir
 	},
 	context: {
 		type: 'object',
@@ -80,12 +84,12 @@ module.exports = {
 			"Display each component with a default example, regardless of if there's a README or <docs/> block written.",
 		type: ['boolean', 'existing file path'],
 		default: false,
-		process: val =>
+		process: (val: string | boolean) =>
 			val === true ? path.resolve(__dirname, '../../../templates/DefaultExample.md') : val
 	},
 	editorConfig: {
 		type: 'object',
-		process: (value, config) => {
+		process: (value: string, config: StyleGuidistConfigObject) => {
 			const defaults = {
 				theme: 'base16-light',
 				mode: 'jsx',
@@ -110,18 +114,18 @@ module.exports = {
 		description: 'Defines the initial state of the props and methods tab',
 		list: MODES,
 		type: 'string',
-		process: (value, config) => {
+		process: (value: string, config: StyleGuidistConfigObject) => {
 			return config.showCode === undefined ? value : config.showCode ? 'expand' : 'collapse'
 		},
 		default: 'collapse'
 	},
 	getComponentPathLine: {
 		type: 'function',
-		default: componentPath => componentPath
+		default: (componentPath: string) => componentPath
 	},
 	getExampleFilename: {
 		type: 'function',
-		default: componentPath => {
+		default: (componentPath: string) => {
 			const files = [
 				path.join(path.dirname(componentPath), 'Readme.md'),
 				componentPath.replace(path.extname(componentPath), '.md')
@@ -136,7 +140,7 @@ module.exports = {
 
 			return false
 		},
-		example: componentPath => componentPath.replace(/\.jsx?$/, '.examples.md')
+		example: (componentPath: string) => componentPath.replace(/\.jsx?$/, '.examples.md')
 	},
 	highlightTheme: {
 		type: 'string',
@@ -239,8 +243,8 @@ module.exports = {
 	sections: {
 		type: 'array',
 		default: [],
-		process: (val, config) => {
-			if (!val) {
+		process: (value: Section[] | undefined, config: StyleGuidistConfigObject): Section[] => {
+			if (!value) {
 				// If root `components` isn't empty, make it a first section
 				// If `components` and `sections` weren’t specified, use default pattern
 				const components = config.components || DEFAULT_COMPONENTS_PATTERN
@@ -250,7 +254,7 @@ module.exports = {
 					}
 				]
 			}
-			return val
+			return value
 		},
 		example: [
 			{
@@ -340,8 +344,8 @@ module.exports = {
 	template: {
 		type: ['object', 'function'],
 		default: {},
-		process: val => {
-			if (typeof val === 'string') {
+		process: (value: any) => {
+			if (typeof value === 'string') {
 				throw new StyleguidistError(
 					`${kleur.bold(
 						'template'
@@ -349,7 +353,7 @@ module.exports = {
 					'template'
 				)
 			}
-			return val
+			return value
 		}
 	},
 	theme: {
@@ -364,9 +368,9 @@ module.exports = {
 		message: 'Title',
 		description: 'Style guide title',
 		type: 'string',
-		process: val => {
-			if (val) {
-				return val
+		process: (value?: string) => {
+			if (value) {
+				return value
 			}
 			const name = getUserPackageJson().name || ''
 			return `${startCase(name)} Style Guide`
@@ -378,11 +382,11 @@ module.exports = {
 	},
 	updateExample: {
 		type: 'function',
-		default: props => {
+		default: (props: { lang: string }) => {
 			if (props.lang === 'example') {
 				props.lang = 'js'
 				logger.warn(
-					'"example" code block language is deprecated. Use "js", "jsx" or "javascript" instead:\n' +
+					'"example" code block language is deprecated. Use "vue", "js", "jsx" or "javascript" instead:\n' +
 						consts.DOCS_DOCUMENTING
 				)
 			}
@@ -398,7 +402,7 @@ module.exports = {
 		description: 'Defines the initial state of the props and methods tab',
 		list: MODES,
 		type: 'string',
-		process: (value, config) => {
+		process: (value: string, config: StyleGuidistConfigObject) => {
 			return config.showUsage === undefined ? value : config.showUsage ? 'expand' : 'collapse'
 		},
 		default: 'collapse'
@@ -420,13 +424,13 @@ module.exports = {
 	},
 	webpackConfig: {
 		type: ['object', 'function'],
-		process: val => {
+		process: (val?: Configuration) => {
 			if (val) {
 				return val
 			}
 
 			const file = findUserWebpackConfig()
-			if (file) {
+			if (typeof file === 'string') {
 				logger.info(`Loading webpack config from:\n${file}`)
 				// eslint-disable-next-line import/no-dynamic-require
 				return require(file)

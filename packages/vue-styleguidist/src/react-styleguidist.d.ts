@@ -57,6 +57,51 @@ declare module 'react-styleguidist/lib/scripts/utils/StyleguidistOptionsPlugin' 
 	export = StyleguidistOptionsPlugin
 }
 
+declare module 'react-styleguidist/lib/scripts/utils/findFileCaseInsensitive' {
+	function findFileCaseInsensitive(filePath: string): boolean
+	export = findFileCaseInsensitive
+}
+
+declare module 'react-styleguidist/lib/scripts/utils/getUserPackageJson' {
+	function getUserPackageJson(): { name: string }
+	export = getUserPackageJson
+}
+
+declare module 'react-styleguidist/lib/scripts/utils/error' {
+	class StyleguidistError extends Error {
+		constructor(message: string, extra?: string)
+	}
+	export = StyleguidistError
+}
+
+declare module 'react-styleguidist/lib/scripts/utils/sanitizeConfig' {
+	import { StyleGuidistConfigObject as StyleGuidistConfigObjectSanitizeConfig } from 'types/StyleGuide'
+
+	function sanitizeConfig(
+		config: StyleGuidistConfigObjectSanitizeConfig,
+		schema: any,
+		configDir: string
+	): StyleGuidistConfigObjectSanitizeConfig
+	export = sanitizeConfig
+}
+
+declare module 'react-styleguidist/lib/scripts/logger' {
+	function setupLogger(
+		methods?: {
+			info?(message: string): void
+			warn?(message: string): void
+			debug?(message: string): void
+		},
+		verbose?: boolean,
+		defaults?: {
+			info?(message: string): void
+			warn?(message: string): void
+			debug?(message: string): void
+		}
+	): void
+	export = setupLogger
+}
+
 // client
 
 declare module 'react-styleguidist/lib/client/utils/getRouteData' {

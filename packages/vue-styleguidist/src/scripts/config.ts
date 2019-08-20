@@ -1,11 +1,12 @@
-const fs = require('fs')
-const path = require('path')
-const findup = require('findup')
-const isString = require('lodash/isString')
-const isPlainObject = require('lodash/isPlainObject')
-const StyleguidistError = require('react-styleguidist/lib/scripts/utils/error')
-const sanitizeConfig = require('react-styleguidist/lib/scripts/utils/sanitizeConfig')
-const schema = require('./schemas/config')
+import * as fs from 'fs'
+import * as path from 'path'
+import findup from 'findup'
+import isString from 'lodash/isString'
+import isPlainObject from 'lodash/isPlainObject'
+import StyleguidistError from 'react-styleguidist/lib/scripts/utils/error'
+import sanitizeConfig from 'react-styleguidist/lib/scripts/utils/sanitizeConfig'
+import schema from './schemas/config'
+import { StyleGuidistConfigObject } from '../types/StyleGuide'
 
 const CONFIG_FILENAME = 'styleguide.config.js'
 
@@ -16,22 +17,26 @@ const CONFIG_FILENAME = 'styleguide.config.js'
  * @param {function} [update] Change config object before running validation on it.
  * @returns {object}
  */
-function getConfig(config, update) {
+export default function getConfig(
+	configParam: string | StyleGuidistConfigObject | { serverPort?: string | number },
+	update?: (conf: StyleGuidistConfigObject | {}) => StyleGuidistConfigObject
+) {
 	let configFilepath
-	if (isString(config)) {
+	let config: StyleGuidistConfigObject | { serverPort?: string | number } = {}
+	if (isString(configParam)) {
 		// Load config from a given file
-		configFilepath = path.resolve(process.cwd(), config)
+		configFilepath = path.resolve(process.cwd(), configParam)
 		if (!fs.existsSync(configFilepath)) {
 			throw new StyleguidistError('Styleguidist config not found: ' + configFilepath + '.')
 		}
 		config = {}
-	} else if (!isPlainObject(config)) {
+	} else if (!isPlainObject(configParam)) {
 		// Try to read config options from a file
 		configFilepath = findConfigFile()
 		config = {}
 	}
 
-	if (configFilepath) {
+	if (typeof configFilepath === 'string') {
 		config = require(configFilepath)
 	}
 
@@ -39,14 +44,15 @@ function getConfig(config, update) {
 		config = update(config)
 	}
 
-	const configDir = configFilepath ? path.dirname(configFilepath) : process.cwd()
+	const configDir =
+		typeof configFilepath === 'string' ? path.dirname(configFilepath) : process.cwd()
 
 	if (config.serverPort && isString(config.serverPort)) {
 		config.serverPort = parseInt(config.serverPort)
 	}
 
 	try {
-		return sanitizeConfig(config, schema, configDir)
+		return sanitizeConfig(config as StyleGuidistConfigObject, schema, configDir)
 	} catch (exception) {
 		/* eslint-disable */
 		console.log(exception instanceof StyleguidistError, exception.constructor.name)
@@ -69,5 +75,3 @@ function findConfigFile() {
 
 	return path.join(configDir, CONFIG_FILENAME)
 }
-
-module.exports = getConfig

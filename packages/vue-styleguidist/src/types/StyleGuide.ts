@@ -4,6 +4,14 @@ import { ProcessedSection } from './Section'
 import { EXPAND_MODE } from './enums'
 
 export interface StyleGuidistConfigObject {
+	printBuildInstructions?: (config: StyleGuidistConfigObject) => void
+	printServerInstructions?: (
+		config: StyleGuidistConfigObject,
+		options: { isHttps: boolean }
+	) => void
+	showUsage?: boolean
+	components?: string
+	highlightTheme?: { theme: string }
 	title?: string
 	pagePerSection?: boolean
 	locallyRegisterComponents?: boolean
@@ -20,6 +28,7 @@ export interface StyleGuidistConfigObject {
 	codeSplit?: boolean
 	styleguidePublicPath?: string
 	styleguideDir?: string
+	showCode?: boolean
 	verbose?: boolean
 	minimize?: boolean
 	require: string[]
@@ -29,11 +38,17 @@ export interface StyleGuidistConfigObject {
 	}
 	mountPointId: string
 	template: string
+	styleguidistDir?: string
 	configureServer?: (server: WebpackDevServer, env: string) => string
 	dangerouslyUpdateWebpackConfig?: (
 		config: Configuration,
 		env: 'development' | 'production' | 'none'
 	) => Configuration
+	logger?: {
+		info(message: string): void
+		warn(message: string): void
+		debug(message: string): void
+	}
 }
 
 export interface StyleGuideObject {

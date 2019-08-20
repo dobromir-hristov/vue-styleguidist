@@ -1,31 +1,24 @@
 /* eslint-disable no-console */
 
-const kleur = require('kleur')
-const ora = require('ora')
-const stringify = require('q-i').stringify
-const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages')
-const webpackDevServerUtils = require('react-dev-utils/WebpackDevServerUtils')
-const openBrowser = require('react-dev-utils/openBrowser')
-const setupLogger = require('react-styleguidist/lib/scripts/logger')
+import kleur from 'kleur'
+import ora from 'ora'
+import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages'
+import webpackDevServerUtils from 'react-dev-utils/WebpackDevServerUtils'
+import openBrowser from 'react-dev-utils/openBrowser'
+import setupLogger from 'react-styleguidist/lib/scripts/logger'
+import { Stats } from 'webpack'
+import { StyleGuidistConfigObject } from 'types/StyleGuide'
+
 const consts = require('./consts')
 const logger = require('glogg')('vsg')
-
-module.exports = {
-	updateConfig,
-	commandBuild,
-	commandServer,
-	commandHelp,
-	verbose,
-	printErrorWithLink
-}
 
 /**
  * @param {object} config
  * @return {object}
  */
-function updateConfig(config) {
+export function updateConfig(config: StyleGuidistConfigObject) {
 	// Set verbose mode from config option or command line switch
-	config.verbose = config.verbose || process.env.VUESG_VERBOSE
+	config.verbose = config.verbose || !!process.env.VUESG_VERBOSE
 
 	// Setup logger *before* config validation (because validations may use logger to print warnings)
 	setupLogger(config.logger, config.verbose)
@@ -33,11 +26,11 @@ function updateConfig(config) {
 	return config
 }
 
-function commandBuild(config) {
+export function commandBuild(config: StyleGuidistConfigObject) {
 	console.log('Building style guide...')
 
 	const build = require('./build').default
-	const compiler = build(config, err => {
+	const compiler = build(config, (err: Error) => {
 		if (err) {
 			console.error(err)
 			process.exit(1)
@@ -51,7 +44,7 @@ function commandBuild(config) {
 	verbose('Webpack config:', compiler.options)
 
 	// Custom error reporting
-	compiler.hooks.done.tap('vsrDoneBuilding', function(stats) {
+	compiler.hooks.done.tap('vsrDoneBuilding', function(stats: Stats) {
 		const messages = formatWebpackMessages(stats.toJson({}, true))
 		const hasErrors = printAllErrorsAndWarnings(messages, stats.compilation)
 		if (hasErrors) {
@@ -64,11 +57,11 @@ function commandBuild(config) {
 	return compiler
 }
 
-function commandServer(config, open) {
-	let spinner
+export function commandServer(config: StyleGuidistConfigObject, open?: boolean) {
+	let spinner: ora.Ora
 
 	const server = require('./server').default
-	const { app, compiler } = server(config, err => {
+	const { app, compiler } = server(config, (err: Error) => {
 		if (err) {
 			console.error(err)
 		} else {
@@ -110,7 +103,7 @@ function commandServer(config, open) {
 	})
 
 	// Custom error reporting
-	compiler.hooks.done.tap('vsgErrorDone', function(stats) {
+	compiler.hooks.done.tap('vsgErrorDone', function(stats: Stats) {
 		if (spinner) {
 			spinner.stop()
 		}
@@ -129,7 +122,7 @@ function commandServer(config, open) {
 	return { app, compiler }
 }
 
-function commandHelp() {
+export function commandHelp() {
 	console.log(
 		[
 			kleur.underline('Usage'),
@@ -160,7 +153,7 @@ function commandHelp() {
  * @param {object} urls
  * @param {string} publicPath
  */
-function printServerInstructions(urls, publicPath) {
+function printServerInstructions(urls: webpackDevServerUtils.Urls, publicPath: string) {
 	console.log()
 	console.log(`You can now view your style guide in the browser:`)
 	console.log()
@@ -174,8 +167,8 @@ function printServerInstructions(urls, publicPath) {
 /**
  * @param {object} config
  */
-function printBuildInstructions(config) {
-	console.log('Style guide published to:\n' + kleur.underline(config.styleguideDir))
+function printBuildInstructions(config: StyleGuidistConfigObject) {
+	console.log('Style guide published to:\n' + kleur.underline(config.styleguideDir || ''))
 }
 
 /**
@@ -183,7 +176,7 @@ function printBuildInstructions(config) {
  * @param {string} linkTitle
  * @param {string} linkUrl
  */
-function printErrorWithLink(message, linkTitle, linkUrl) {
+export function printErrorWithLink(message: string, linkTitle: string, linkUrl: string) {
 	console.error(`${kleur.bold.red(message)}\n\n${linkTitle}\n${kleur.underline(linkUrl)}\n`)
 }
 
@@ -193,12 +186,19 @@ function printErrorWithLink(message, linkTitle, linkUrl) {
  * @param {object} originalErrors
  * @param {'success'|'error'|'warning'} type
  */
-function printErrors(header, errors, originalErrors, type) {
+type MessageType = 'success' | 'error' | 'warning'
+
+function printErrors(
+	header: string,
+	errors: (string | Error)[],
+	originalErrors: (string | Error)[],
+	type: MessageType
+) {
 	printStatus(header, type)
 	console.error()
 	const messages = process.env.VUESG_VERBOSE ? originalErrors : errors
 	messages.forEach(message => {
-		console.error(message.message || message)
+		console.error(typeof message === 'string' ? message : message.message)
 	})
 }
 
@@ -206,7 +206,7 @@ function printErrors(header, errors, originalErrors, type) {
  * @param {string} text
  * @param {'success'|'error'|'warning'} type
  */
-function printStatus(text, type) {
+function printStatus(text: string, type: MessageType) {
 	if (type === 'success') {
 		console.log(kleur.inverse.bold.green(' DONE ') + ' ' + text)
 	} else if (type === 'error') {
@@ -221,7 +221,16 @@ function printStatus(text, type) {
  * @param {object} compilation
  * @return {boolean}
  */
-function printAllErrorsAndWarnings(messages, compilation) {
+function printAllErrorsAndWarnings(
+	messages: {
+		errors: string[]
+		warnings: string[]
+	},
+	compilation: {
+		errors: string[]
+		warnings: string[]
+	}
+) {
 	// If errors exist, only show errors
 	if (messages.errors.length) {
 		printAllErrors(messages.errors, compilation.errors)
@@ -240,7 +249,7 @@ function printAllErrorsAndWarnings(messages, compilation) {
  * @param {object} errors
  * @param {object} originalErrors
  */
-function printAllErrors(errors, originalErrors) {
+function printAllErrors(errors: string[], originalErrors: string[]) {
 	printStyleguidistError(errors)
 	printNoLoaderError(errors)
 	printErrors('Failed to compile', errors, originalErrors, 'error')
@@ -250,14 +259,14 @@ function printAllErrors(errors, originalErrors) {
  * @param {object} warnings
  * @param {object} originalWarnings
  */
-function printAllWarnings(warnings, originalWarnings) {
+function printAllWarnings(warnings: string[], originalWarnings: string[]) {
 	printErrors('Compiled with warnings', warnings, originalWarnings, 'warning')
 }
 
 /**
  * @param {object} errors
  */
-function printStyleguidistError(errors) {
+function printStyleguidistError(errors: string[]) {
 	const styleguidistError = errors.find(message =>
 		message.includes('Module build failed: Error: Styleguidist:')
 	)
@@ -266,14 +275,16 @@ function printStyleguidistError(errors) {
 	}
 
 	const m = styleguidistError.match(/Styleguidist: (.*?)\n/)
-	printErrorWithLink(m[1], 'Learn how to configure your style guide:', consts.DOCS_CONFIG)
+	if (m) {
+		printErrorWithLink(m[1], 'Learn how to configure your style guide:', consts.DOCS_CONFIG)
+	}
 	process.exit(1)
 }
 
 /**
  * @param {object} errors
  */
-function printNoLoaderError(errors) {
+function printNoLoaderError(errors: string[]) {
 	if (process.env.VUESG_VERBOSE) {
 		return
 	}
@@ -297,6 +308,6 @@ function printNoLoaderError(errors) {
  * @param {string} header
  * @param {object} object
  */
-function verbose(header, object) {
-	logger.debug(kleur.bold(header) + '\n\n' + stringify(object))
+export function verbose(header: string, object: any) {
+	logger.debug(kleur.bold(header) + '\n\n' + JSON.stringify(object, null, 2))
 }

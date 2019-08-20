@@ -1,12 +1,13 @@
 // Make sure user has webpack installed
-require('react-styleguidist/lib/scripts/utils/ensureWebpack')
-const setupLogger = require('react-styleguidist/lib/scripts/logger')
-
-const build = require('./build')
-const server = require('./server')
-const makeWebpackConfig = require('./make-webpack-config')
-const getConfig = require('./config')
-const binutils = require('./binutils')
+import 'react-styleguidist/lib/scripts/utils/ensureWebpack'
+import { Stats } from 'webpack'
+import { StyleGuidistConfigObject } from 'types/StyleGuide'
+import setupLogger from 'react-styleguidist/lib/scripts/logger'
+import build from './build'
+import server from './server'
+import makeWebpackConfig from './make-webpack-config'
+import getConfig from './config'
+import * as binutils from './binutils'
 
 /**
  * Initialize Vue Styleguide API.
@@ -15,8 +16,11 @@ const binutils = require('./binutils')
  * @param {function} [updateConfig] update config post resolution
  * @returns {object} API.
  */
-module.exports = function(config, updateConfig) {
-	config = getConfig(config, config => {
+export default function(
+	config: StyleGuidistConfigObject,
+	updateConfig: (conf: StyleGuidistConfigObject) => void
+) {
+	config = getConfig(config, (config: StyleGuidistConfigObject) => {
 		setupLogger(config.logger, config.verbose, {})
 		if (typeof updateConfig === 'function') {
 			updateConfig(config)
@@ -31,7 +35,9 @@ module.exports = function(config, updateConfig) {
 		 * @param {Function} callback callback(err, config, stats).
 		 * @return {Compiler} Webpack Compiler instance.
 		 */
-		build(callback) {
+		build(
+			callback: (err: Error | undefined, config: StyleGuidistConfigObject, stats: Stats) => void
+		) {
 			return build(config, (err, stats) => callback(err, config, stats))
 		},
 
@@ -42,7 +48,7 @@ module.exports = function(config, updateConfig) {
 		 * @return {ServerInfo.App} Webpack-Dev-Server.
 		 * @return {ServerInfo.Compiler} Webpack Compiler instance.
 		 */
-		server(callback) {
+		server(callback: (err: Error | undefined, config: StyleGuidistConfigObject) => void) {
 			return server(config, err => callback(err, config))
 		},
 
@@ -52,12 +58,12 @@ module.exports = function(config, updateConfig) {
 		 * @param {string} [env=production] 'production' or 'development'.
 		 * @return {object}
 		 */
-		makeWebpackConfig(env) {
+		makeWebpackConfig(env: 'development' | 'production' | 'none') {
 			return makeWebpackConfig(config, env || 'production')
 		},
 
 		binutils: {
-			server: open => binutils.commandServer(config, open),
+			server: (open: boolean) => binutils.commandServer(config, open),
 			build: () => binutils.commandBuild(config)
 		}
 	}

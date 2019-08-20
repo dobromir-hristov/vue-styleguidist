@@ -62,7 +62,6 @@
 		"ora": "^2.1.0",
 		"prismjs": "^1.15.0",
 		"prop-types": "^15.6.2",
-		"q-i": "^2.0.1",
 		"qss": "^2.0.3",
 		"react": "^16.4.1",
 		"react-codemirror2": "^5.1.0",
@@ -90,9 +89,9 @@
 		"webpack": ">=4 < 4.29"
 	},
 	"devDependencies": {
-		"@types/copy-webpack-plugin": "^5.0.0",
 		"@types/lodash": "^4.14.136",
 		"@types/react-dom": "^16.8.5",
+		"@types/react-dev-utils": "^9.0.1",
 		"@types/terser-webpack-plugin": "^1.2.1",
 		"@types/webpack": "^4.32.1",
 		"@types/webpack-dev-server": "^3.1.7",
