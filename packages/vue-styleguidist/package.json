@@ -89,6 +89,7 @@
 		"webpack": ">=4 < 4.29"
 	},
 	"devDependencies": {
+		"@types/copy-webpack-plugin": "4.4.1",
 		"@types/lodash": "^4.14.136",
 		"@types/react-dom": "^16.8.5",
 		"@types/react-dev-utils": "^9.0.1",
